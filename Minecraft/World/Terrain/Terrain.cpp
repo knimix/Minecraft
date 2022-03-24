@@ -2,22 +2,17 @@
 #include <thread>
 #include "imgui/imgui.h"
 #include "../../Texture/Texture.h"
+#include <iostream>
 
-std::unordered_map<uint8_t,BlockTexture> Terrain::BlockTextures;
 int Terrain::ViewDistance = 20;
 
 
 
-Terrain::Terrain(IO* io, const glm::mat4& projection,Player* player) {
-    m_Player = player;
-
+Terrain::Terrain(IO* io, const glm::mat4& projection) {
     m_TerrainShader = new Shader("../Assets/Shader/TerrainShader.glsl",true);
-    m_TerrainShader->Bind();
     m_TerrainShader->SetUniformMatrix4f("projection",projection);
-    m_ChunkContainer = new ChunkContainer(m_Player,m_TerrainShader);
 
-    m_TextureMatrix = new TextureMatrix();
-
+    m_BlockTextures = new TextureMatrix();
     auto dirtTexture = Texture::LoadTexture("../Assets/Textures/dirt.png");
     auto stoneTexture = Texture::LoadTexture("../Assets/Textures/stone.png");
     auto grassTopTexture = Texture::LoadTexture("../Assets/Textures/grass_block_top.png");
@@ -26,8 +21,6 @@ Terrain::Terrain(IO* io, const glm::mat4& projection,Player* player) {
     auto andesitTexture = Texture::LoadTexture("../Assets/Textures/andesite.png");
     auto dioritTexture = Texture::LoadTexture("../Assets/Textures/diorite.png");
     auto granitTexture = Texture::LoadTexture("../Assets/Textures/granite.png");
-  //  auto tomTexture = Texture::LoadTexture("../Assets/Textures/tom.jpg");
-
 
     BlockTexture stone;
     stone.Front = stoneTexture;
@@ -91,36 +84,42 @@ Terrain::Terrain(IO* io, const glm::mat4& projection,Player* player) {
     dioriteBlock.Top = dioritTexture;
     dioriteBlock.Bottom = dioritTexture;
 
-    m_TextureMatrix->AddBlockTexture(grass);
-    m_TextureMatrix->AddBlockTexture(dirt);
-    m_TextureMatrix->AddBlockTexture(stone);
-    m_TextureMatrix->AddBlockTexture(oakBlock);
-    m_TextureMatrix->AddBlockTexture(andesiteBlock);
-    m_TextureMatrix->AddBlockTexture(dioriteBlock);
-    m_TextureMatrix->AddBlockTexture(granitBlock);
+    m_BlockTextures->AddBlockTexture(grass);
+    m_BlockTextures->AddBlockTexture(dirt);
+    m_BlockTextures->AddBlockTexture(stone);
+    m_BlockTextures->AddBlockTexture(oakBlock);
+    m_BlockTextures->AddBlockTexture(andesiteBlock);
+    m_BlockTextures->AddBlockTexture(dioriteBlock);
+    m_BlockTextures->AddBlockTexture(granitBlock);
+    m_BlockTextures->Create(16,16,0);
 
-    m_TextureMatrix->Create(16,16,0);
+
+
 }
 
 Terrain::~Terrain() {
     delete m_TerrainShader;
-    delete m_ChunkContainer;
-    delete m_TextureMatrix;
+   // delete m_ChunkMap;
+    delete m_BlockTextures;
 }
 void Terrain::Prepare() {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glEnable(GL_BLEND);
 }
-void Terrain::Update() {
-    m_ChunkContainer->Update();
+void Terrain::Update(const glm::vec3& position) {
+
 }
 
 void Terrain::Render(const glm::mat4& view) {
     m_TerrainShader->Bind();
     m_TerrainShader->SetUniformMatrix4f("view",view);
-    m_TextureMatrix->Bind();
-    m_ChunkContainer->Render();
+    m_BlockTextures->Bind();
+    for(auto chunk : ChunkManager::GetChunkMap()->GetChunks()){
+        m_TerrainShader->SetUniformInt("chunkX",chunk->GetChunkPosition().x);
+        m_TerrainShader->SetUniformInt("chunkZ",chunk->GetChunkPosition().z);
+        chunk->Render();
+    }
 }
 
 

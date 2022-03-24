@@ -1,5 +1,5 @@
 #include "ChunkUpdater.h"
-#include "../ChunkContainer/ChunkContainer.h"
+#include "../ChunkManager/ChunkManager.h"
 
 
 std::queue<Chunk*> ChunkUpdater::m_UpdateChunks;
@@ -20,8 +20,7 @@ ChunkUpdater::ChunkUpdater(int threadCount) {
                 m_Mutex.unlock();
 
                 if(chunk != nullptr){
-                   // chunk->Update();
-                    if(ChunkContainer::IsChunkInPlayerRange(chunk)){
+                    if(ChunkManager::IsChunkInViewDistance(chunk)){
                         if(!chunk->m_Generated){
                             chunk->Generate();
                         }
@@ -45,6 +44,7 @@ ChunkUpdater::~ChunkUpdater() {
 }
 
 void ChunkUpdater::UpdateChunk(Chunk *chunk) {
+    chunk->m_Updating = true;
     m_UpdateChunks.emplace(chunk);
 }
 

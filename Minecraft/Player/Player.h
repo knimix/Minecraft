@@ -13,6 +13,6 @@ private:
     bool m_Filled = false;
     bool m_Cursor = false;
     IO* m_IO = nullptr;
-    glm::vec3 m_Position = {0.f,0,0.f};
+    glm::vec3 m_Position = {8.f,0,8.f};
     Camera* m_Camera = nullptr;
 };

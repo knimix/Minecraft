@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../Chunk.h"
-#include "../ChunkPosition.h"
+#include "../ChunkMap/ChunkMap.h"
 #include <thread>
 #include <vector>
 #include <queue>

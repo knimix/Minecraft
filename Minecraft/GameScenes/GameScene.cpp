@@ -11,8 +11,10 @@ GameScene::GameScene(IO *io) : Scene(io) {
     m_Projection = glm::perspective(glm::radians(110.0f), (float) io->WindowWidth / (float) io->WindowHeight, 0.1f,
                                     2000.0f);
 
-    m_Terrain = new Terrain(GetIO(), m_Projection, m_Player);
+    ChunkManager::Initialize(123);
+    ChunkManager::SetCamera(m_Player->GetCamera());
 
+    m_Terrain = new Terrain(GetIO(), m_Projection);
 
     m_BlockHighLight = new BlockHighlight(m_Projection);
     m_BlockHighLight->SetPosition({0, 10, 0});
@@ -36,18 +38,29 @@ void GameScene::Unload() {
 void GameScene::Update(double deltaTime) {
     Scene::Update(deltaTime);
     m_Player->Update();
-    m_Terrain->Update();
+    m_Terrain->Update(m_Player->GetPosition());
 
+    ChunkManager::Update(deltaTime);
+
+    if(m_IO->KeyboardClicked[GLFW_KEY_G]){
+        auto chunk = ChunkManager::GetChunkMap()->GetChunk(Coordinate::ToChunkPosition(Coordinate::ToBlockPosition(m_Player->GetPosition())));
+
+        std::cout << "Current Chunk X: " << chunk->GetPosition().x << " Z: " << chunk->GetPosition().y << std::endl;
+        std::cout << chunk->m_FirstUpload << std::endl;
+        std::cout << chunk->m_Generated << std::endl;
+        std::cout << chunk->m_Uploaded << std::endl;
+        std::cout << chunk->m_BlockData.size() << std::endl;
+    }
 
     Ray ray(m_Player->GetCamera()->GetCameraPosition(), m_Player->GetCamera()->GetCameraFront());
 
     for (; ray.GetLength() < 5; ray.Step()) {
 
-        glm::vec3 blockPosition = ChunkContainer::ToBlockCoord(ray.GetEndpoint());
-        glm::vec3 localBlockPosition = ChunkContainer::ToLocalBlockCoord(blockPosition);
+        auto blockPosition = Coordinate::ToBlockPosition(ray.GetEndpoint());
+        auto localBlockPosition = Coordinate::ToLocalBlockPosition(blockPosition);
 
-        auto chunkPosition = ChunkContainer::ToChunkCoord(blockPosition);
-        Chunk *chunk = ChunkContainer::GetChunk({chunkPosition.x, chunkPosition.z});
+        auto chunkPosition = Coordinate::ToChunkPosition(blockPosition);
+        Chunk *chunk = ChunkManager::GetChunkMap()->GetChunk(chunkPosition);
         if(chunk == nullptr){
             break;
         }
@@ -55,19 +68,19 @@ void GameScene::Update(double deltaTime) {
 
         uint8_t block = chunk->GetBlock(localBlockPosition.x,localBlockPosition.y,localBlockPosition.z);
         if (block != 0) {
-            m_BlockHighLight->SetPosition(blockPosition);
+            m_BlockHighLight->SetPosition({blockPosition.x, blockPosition.y, blockPosition.z});
             if(m_IO->MouseClicked[GLFW_MOUSE_BUTTON_1]){
                 chunk->SetBlock(localBlockPosition.x,localBlockPosition.y,localBlockPosition.z,0);
                 ChunkUpdater::UpdateChunk(chunk);
             }
             if(m_IO->MouseClicked[GLFW_MOUSE_BUTTON_2]){
                 ray.StepBack();
-                blockPosition = ChunkContainer::ToBlockCoord(ray.GetEndpoint());
-                localBlockPosition = ChunkContainer::ToLocalBlockCoord(blockPosition);
+                blockPosition = Coordinate::ToBlockPosition(ray.GetEndpoint());
+                localBlockPosition = Coordinate::ToLocalBlockPosition(blockPosition);
 
 
-                 chunkPosition = ChunkContainer::ToChunkCoord(blockPosition);
-                 chunk = ChunkContainer::GetChunk({chunkPosition.x, chunkPosition.z});
+                chunkPosition = Coordinate::ToChunkPosition(blockPosition);
+                chunk = ChunkManager::GetChunkMap()->GetChunk({chunkPosition.x, chunkPosition.z});
                 if(chunk == nullptr){
                     break;
                 }
@@ -80,7 +93,6 @@ void GameScene::Update(double deltaTime) {
             m_BlockHighLight->SetPosition({0, -1000, 0});
         }
     }
-
 
 }
 

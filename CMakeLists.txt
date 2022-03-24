@@ -18,6 +18,6 @@ set(CMAKE_CXX_STANDARD_LIBRARIES "-static-libgcc -static-libstdc++ -lwsock32 -lw
 
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Bstatic,--whole-archive -lwinpthread -Wl,--no-whole-archive")
 
-add_executable(Minecraft main.cpp ${SOURCE_FILES} ${IMGUI_FILES} dependencies/FastNoise/src/FastNoise/FastNoise.cpp Minecraft/World/Chunk/BlockHighlight/BlockHighlight.cpp Minecraft/World/Chunk/BlockHighlight/BlockHighlight.h)
+add_executable(Minecraft main.cpp ${SOURCE_FILES} ${IMGUI_FILES} dependencies/FastNoise/src/FastNoise/FastNoise.cpp Minecraft/World/Chunk/BlockHighlight/BlockHighlight.cpp Minecraft/World/Chunk/BlockHighlight/BlockHighlight.h Minecraft/World/Chunk/ChunkMap/ChunkMap.cpp Minecraft/World/Chunk/ChunkMap/ChunkMap.h Minecraft/World/Chunk/ChunkManager/ChunkManager.cpp Minecraft/World/Chunk/ChunkManager/ChunkManager.h Minecraft/World/Chunk/Coordinate.h Minecraft/World/Chunk/Coordinate.cpp)
 
 target_link_libraries(Minecraft ${CMAKE_CURRENT_LIST_DIR}/dependencies/OpenGL/bin/OpenGL.a ${CMAKE_CURRENT_LIST_DIR}/dependencies/GLFW/bin/GLFW.a )

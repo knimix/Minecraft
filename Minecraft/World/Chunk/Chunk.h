@@ -4,6 +4,7 @@
 #include "glm/glm.hpp"
 #include <FastNoise/FastNoise.h>
 #include <atomic>
+#include "Coordinate.h"
 
 
 #define CHUNK_SIZE 16
@@ -22,7 +23,7 @@
 
 class Chunk {
 public:
-    Chunk(int seed, int x, int z) : m_Seed(seed), m_X(x), m_Z(z){};
+    Chunk(int seed, const ChunkPosition& position) : m_Seed(seed), m_Position(position), m_X(position.x), m_Z(position.z){};
     void Create();
     void Delete();
     void Generate();
@@ -36,9 +37,14 @@ public:
     std::atomic_bool m_Generated = false;
     std::atomic_bool m_Uploaded = false;
     std::atomic_bool m_Updating = false;
+    std::atomic_bool m_FirstUpload = false;
+    std::atomic_bool m_Initialized = false;
     uint8_t m_Blocks[CHUNK_SIZE][CHUNK_HEIGHT][CHUNK_SIZE];
-private:
+
+    inline ChunkPosition& GetChunkPosition() {return m_Position;}
+public:
     void CreateFaceData(std::vector<int>& data, uint8_t blockX, uint8_t blockY, uint8_t blockZ, uint8_t face, uint8_t blockType, uint8_t lightLevel);
+    ChunkPosition m_Position;
     std::vector<int> m_BlockData;
     std::vector<int> m_BlockDataBuffer;
     int m_Seed = 0,m_X = 0, m_Z = 0;

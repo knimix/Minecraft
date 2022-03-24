@@ -20,7 +20,7 @@ public:
     inline const glm::vec3& GetCameraFront() const {return m_CameraFront;}
     inline const glm::vec3& GetCameraUp() const {return m_CameraUp;}
     inline const glm::vec3& GetCameraDirection() const {return m_CameraDirection;}
-    float m_CameraSpeed = 0.2f;
+    float m_CameraSpeed = 0.6f;
 
 private:
     IO* m_IO = nullptr;

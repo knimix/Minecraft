@@ -1,7 +1,6 @@
 #pragma once
 #include "../Chunk/Chunk.h"
 #include <FastNoise/FastNoise.h>
-#include "../Chunk/ChunkPosition.h"
 #include <unordered_map>
 
 class WorldGenerator {
