@@ -30,7 +30,7 @@ void PreCreateChunks(const ChunkPosition &center) {
 void ChunkManager::Initialize(int seed) {
     s_ChunkMap = new ChunkMap();
     s_ChunkUpdater = new ChunkUpdater(1);
-    s_ChunkGenerator = new ChunkGenerator(4);
+    s_ChunkGenerator = new ChunkGenerator(2);
     s_Seed = seed;
 }
 
@@ -62,7 +62,7 @@ void ChunkManager::Update(double delaTime) {
         }
 
         if(!IsChunkInPreCreateDistance(chunk)){
-            if(!chunk->Updating && !chunk->Generating){
+            if(!chunk->Updating && !chunk->Generating && !chunk->Accessed){
                 s_ChunkMap->RemoveChunk(chunk->Position);
                 delete chunk;
 

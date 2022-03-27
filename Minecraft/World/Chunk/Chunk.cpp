@@ -32,10 +32,10 @@ void Chunk::Generate() {
 void Chunk::Update() {
     m_BlockDataBuffer.clear();
 
-    Chunk *leftChunk = ChunkManager::GetChunkMap()->GetChunk({Position.x - 1, Position.z});
-    Chunk *rightChunk = ChunkManager::GetChunkMap()->GetChunk({Position.x + 1, Position.z});
-    Chunk *frontChunk = ChunkManager::GetChunkMap()->GetChunk({Position.x, Position.z + 1});
-    Chunk *backChunk = ChunkManager::GetChunkMap()->GetChunk({Position.x, Position.z - 1});
+    Chunk *leftChunk = ChunkManager::GetChunkMap()->GetChunk({Position.x - 1, Position.z},true);
+    Chunk *rightChunk = ChunkManager::GetChunkMap()->GetChunk({Position.x + 1, Position.z},true);
+    Chunk *frontChunk = ChunkManager::GetChunkMap()->GetChunk({Position.x, Position.z + 1},true);
+    Chunk *backChunk = ChunkManager::GetChunkMap()->GetChunk({Position.x, Position.z - 1},true);
     m_Mutex.lock();
     for (uint8_t x = 0; x < CHUNK_SIZE; x++) {
         for (uint16_t y = 0; y < CHUNK_HEIGHT; y++) {
@@ -128,6 +128,10 @@ void Chunk::Update() {
             }
         }
     }
+    ChunkManager::GetChunkMap()->UnlockChunk(leftChunk);
+    ChunkManager::GetChunkMap()->UnlockChunk(rightChunk);
+    ChunkManager::GetChunkMap()->UnlockChunk(frontChunk);
+    ChunkManager::GetChunkMap()->UnlockChunk(backChunk);
     m_Mutex.unlock();
     Uploaded = false;
 }

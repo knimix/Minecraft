@@ -25,6 +25,7 @@ public:
     std::atomic_bool Updating = false;
     std::atomic_int UpdateCount = 0;
     std::atomic_bool Uploaded = true;
+    std::atomic_bool Accessed = false;
     bool FirstUpdate = false;
 private:
     void CreateFaceData(std::vector<int>& data, uint8_t blockX, uint8_t blockY, uint8_t blockZ, uint8_t face, uint8_t blockType, uint8_t lightLevel);
