@@ -21,4 +21,6 @@ private:
     Player* m_Player = nullptr;
     BlockHighlight* m_BlockHighLight = nullptr;
     Terrain* m_Terrain;
+    bool m_ToggleDebug = false;
+
 };

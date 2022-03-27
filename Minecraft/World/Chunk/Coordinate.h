@@ -4,6 +4,10 @@
 #include <unordered_set>
 #include "glm/vec3.hpp"
 
+#define CHUNK_SIZE 16
+#define CHUNK_HEIGHT 256
+#define CHUNK_AREA CHUNK_SIZE * CHUNK_SIZE * CHUNK_HEIGHT
+
 struct ChunkPosition{
     int64_t x;
     int64_t z;
@@ -35,4 +39,6 @@ namespace Coordinate{
      BlockPosition ToBlockPosition(const glm::vec3& position);
      BlockPosition ToLocalBlockPosition(const BlockPosition& blockPosition);
      ChunkPosition ToChunkPosition(const BlockPosition& blockPosition);
+     uint16_t ToBlockIndex(const BlockPosition& blockPosition);
+     BlockPosition ToBlockPosition(uint16_t blockIndex);
 }

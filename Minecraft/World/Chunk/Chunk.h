@@ -1,55 +1,37 @@
 #pragma once
 #include "../../OpenGL/Buffer.h"
-#include <array>
-#include "glm/glm.hpp"
-#include <FastNoise/FastNoise.h>
-#include <atomic>
 #include "Coordinate.h"
-
-
-#define CHUNK_SIZE 16
-#define CHUNK_HEIGHT 255
-#define CHUNK_AREA CHUNK_SIZE * CHUNK_SIZE * CHUNK_HEIGHT
-
-
-#define FACE_FRONT 0
-#define FACE_BACK 1
-#define FACE_LEFT 2
-#define FACE_RIGHT 3
-#define FACE_TOP 4
-#define FACE_BOTTOM 5
+#include "../Blocks.h"
+#include <atomic>
+#include <array>
 
 
 
 class Chunk {
 public:
-    Chunk(int seed, const ChunkPosition& position) : m_Seed(seed), m_Position(position), m_X(position.x), m_Z(position.z){};
+    explicit Chunk(const ChunkPosition& chunkPosition) : Position(chunkPosition){std::fill(std::begin(m_Blocks), std::end(m_Blocks), 0);};
     void Create();
-    void Delete();
+    void Destroy();
     void Generate();
     void Update();
-    void LoadToGPU();
+    void Upload();
     void Render();
-    uint8_t GetBlock(int x, int y, int z);
-    void SetBlock(int x, int y, int z, uint8_t block);
-    inline glm::vec2 GetPosition(){return {m_X,m_Z};}
-    inline std::vector<int>& GetBlockData(){return m_BlockData;}
-    std::atomic_bool m_Generated = false;
-    std::atomic_bool m_Uploaded = false;
-    std::atomic_bool m_Updating = false;
-    std::atomic_bool m_FirstUpload = false;
-    std::atomic_bool m_Initialized = false;
-    uint8_t m_Blocks[CHUNK_SIZE][CHUNK_HEIGHT][CHUNK_SIZE];
-
-    inline ChunkPosition& GetChunkPosition() {return m_Position;}
-public:
+    uint8_t GetBlock(uint8_t x, uint8_t y, uint8_t z);
+    void SetBlock(uint8_t x, uint8_t y, uint8_t z, uint8_t block);
+    ChunkPosition Position;
+    std::atomic_bool Created = false;
+    std::atomic_bool Generating = false;
+    std::atomic_bool Generated = false;
+    std::atomic_bool Updating = false;
+    std::atomic_int UpdateCount = 0;
+    std::atomic_bool Uploaded = true;
+    bool FirstUpdate = false;
+private:
     void CreateFaceData(std::vector<int>& data, uint8_t blockX, uint8_t blockY, uint8_t blockZ, uint8_t face, uint8_t blockType, uint8_t lightLevel);
-    ChunkPosition m_Position;
-    std::vector<int> m_BlockData;
-    std::vector<int> m_BlockDataBuffer;
-    int m_Seed = 0,m_X = 0, m_Z = 0;
     VertexArray* m_VertexArray = nullptr;
     ShaderBuffer* m_ShaderBuffer = nullptr;
-
-
+    mutable std::mutex m_Mutex;
+    std::vector<int> m_BlockData;
+    std::vector<int> m_BlockDataBuffer;
+    std::array<uint8_t,CHUNK_AREA> m_Blocks = {0};
 };

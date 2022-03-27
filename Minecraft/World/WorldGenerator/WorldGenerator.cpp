@@ -18,7 +18,7 @@ uint8_t WorldGenerator::GetDefaultBlock(int64_t x, int64_t y, int64_t z) {
     //Chunk* chunk = ChunkMap::GetChunk({chunkPosition.x,chunkPosition.z});
 
 
- /*  float threshold = 0.55;
+   float threshold = 0.55;
     auto noise = (m_Noise.GetNoise(x, y, z) + 1.0f) / 2.0f;
     if (noise < threshold)
         return BLOCK_AIR;
@@ -42,8 +42,8 @@ uint8_t WorldGenerator::GetDefaultBlock(int64_t x, int64_t y, int64_t z) {
             }
 
         }
-    }*/
-      int height = int(((m_Noise.GetNoise(x, z) + 1.0f) / 2.0f) * 30);
+    }
+      /*int height = int(((m_Noise.GetNoise(x, z) + 1.0f) / 2.0f) * 30);
       if (y > height || y < 0) {
           return BLOCK_AIR;
       } else if (y == height) {
@@ -52,7 +52,7 @@ uint8_t WorldGenerator::GetDefaultBlock(int64_t x, int64_t y, int64_t z) {
           return BLOCK_DIRT;
       } else {
           return BLOCK_STONE;
-      }
+      }*/
 }
 
 

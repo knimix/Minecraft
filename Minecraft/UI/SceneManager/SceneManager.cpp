@@ -62,7 +62,7 @@ void SceneManager::EndFrame() {
     while (!m_UnloadingScenes.empty())
     {
         Scene* scene = m_UnloadingScenes.front();
-        //m_LoadedScenes.erase(scene->SceneName);
+        m_LoadedScenes.erase(scene->SceneName);
         scene->Unload();
         s_CurrentScene = nullptr;
         m_UnloadingScenes.pop();
@@ -71,7 +71,7 @@ void SceneManager::EndFrame() {
     while (!m_LoadingScenes.empty())
     {
         Scene* scene = m_LoadingScenes.front();
-       // m_LoadedScenes.insert(std::make_pair(scene->SceneName,scene));
+        m_LoadedScenes.insert(std::make_pair(scene->SceneName,scene));
         scene->Load();
         s_CurrentScene = scene;
         m_LoadingScenes.pop();
@@ -82,23 +82,23 @@ void SceneManager::EndFrame() {
 }
 
 void SceneManager::Update(double deltaTime) {
-   /* std::unordered_map<std::string,Scene*>::iterator it;
+    std::unordered_map<std::string,Scene*>::iterator it;
     for(it = m_LoadedScenes.begin(); it != m_LoadedScenes.end();it++){
         it->second->Update(deltaTime);
-    }*/
-   if(s_CurrentScene != nullptr){
-       s_CurrentScene->Update(deltaTime);
-   }
+    }
+   //if(s_CurrentScene != nullptr){
+       //s_CurrentScene->Update(deltaTime);
+   //}
 }
 
 void SceneManager::Render() {
-   /*std::unordered_map<std::string,Scene*>::iterator it;
+   std::unordered_map<std::string,Scene*>::iterator it;
     for(it = m_LoadedScenes.begin(); it != m_LoadedScenes.end();it++){
         it->second->Render();
-    }*/
-    if(s_CurrentScene != nullptr){
-        s_CurrentScene->Render();
     }
+   // if(s_CurrentScene != nullptr){
+       // s_CurrentScene->Render();
+    //}
 }
 
 void SceneManager::RenderUI() {
@@ -109,12 +109,12 @@ void SceneManager::RenderUI() {
     std::unordered_map<std::string,Scene*>::iterator it;
     m_Renderer2D->BeginBatch();
 
-   /* for(it = m_LoadedScenes.begin(); it != m_LoadedScenes.end();it++){
+    for(it = m_LoadedScenes.begin(); it != m_LoadedScenes.end();it++){
         it->second->RenderUI(m_Renderer2D);
-    }*/
-    if(s_CurrentScene != nullptr){
-        s_CurrentScene->RenderUI(m_Renderer2D);
     }
+   /* if(s_CurrentScene != nullptr){
+        s_CurrentScene->RenderUI(m_Renderer2D);
+    }*/
     m_Renderer2D->EndBatch();
     m_Renderer2D->Flush();
 }

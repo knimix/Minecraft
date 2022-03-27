@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "../GameScenes/GameScene.h"
 #include "../GameScenes/MainMenuScene.h"
+#include "../GameScenes/InGame/DebugScene.h"
 #include "../UI/FontManager/FontManager.h"
 
 static bool s_Run = true;
@@ -18,7 +19,11 @@ Application::Application() {
     ImGui_ImplGlfw_InitForOpenGL(m_Window->GetBaseWindow(), true);
     ImGui_ImplOpenGL3_Init();*/
 
+  std::cout << glGetString(GL_RENDERER) << std::endl;
+//  std::cout << glGetString(GL_CONTEXT_PROFILE_MASK_ARB) << std::endl;
+
    FontManager::AddFont("default",new Font("../Assets/Fonts/MinecraftRegular-Bmg3.otf",25));
+   FontManager::AddFont("draw",new Font("../Assets/Fonts/MinecraftRegular-Bmg3.otf",28));
    // new Font("../Assets/Fonts/arial.ttf",40);
    // new Font("../Assets/Fonts/Minecraft.ttf",20);
     SceneManager = new class SceneManager(m_Window->GetIO());
@@ -26,6 +31,7 @@ Application::Application() {
 
     SceneManager->AddScene("MainMenu", new MainMenuScene(m_Window->GetIO()));
     SceneManager->AddScene("GameView", new GameScene(m_Window->GetIO()));
+    SceneManager->AddScene("DebugView", new DebugScene(m_Window->GetIO()));
 
     SceneManager->LoadScene("MainMenu");
 

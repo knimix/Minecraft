@@ -1,35 +1,34 @@
 #include "ChunkUpdater.h"
+#include <iostream>
 #include "../ChunkManager/ChunkManager.h"
 
 
 std::queue<Chunk*> ChunkUpdater::m_UpdateChunks;
 
-
-
-
 ChunkUpdater::ChunkUpdater(int threadCount) {
     for (int i = 0; i < threadCount; i++) {
-        auto thread = new std::thread([this] {
+        std::thread *thread;
+        thread = new std::thread([this] {
             while (true) {
                 m_Mutex.lock();
-                Chunk* chunk = nullptr;
+                Chunk *chunk = nullptr;
                 if (!m_UpdateChunks.empty()) {
                     chunk = m_UpdateChunks.front();
                     m_UpdateChunks.pop();
                 }
                 m_Mutex.unlock();
 
-                if(chunk != nullptr){
-                    if(ChunkManager::IsChunkInViewDistance(chunk)){
-                        if(!chunk->m_Generated){
-                            chunk->Generate();
-                        }
+                if (chunk != nullptr) {
+                    if (ChunkManager::IsChunkInPreCreateDistance(chunk)) {
                         chunk->Update();
                     }
-                    chunk->m_Updating = false;
-                }else{
+                    chunk->UpdateCount--;
+                    if(chunk->UpdateCount <= 0){
+                        chunk->Updating = false;
+                    }
+                } else {
+                    std::this_thread::sleep_for(std::chrono::microseconds(1));
                 }
-                std::this_thread::sleep_for(std::chrono::microseconds (1));
             }
         });
         m_Threads.emplace_back(thread);
@@ -44,7 +43,8 @@ ChunkUpdater::~ChunkUpdater() {
 }
 
 void ChunkUpdater::UpdateChunk(Chunk *chunk) {
-    chunk->m_Updating = true;
+    chunk->Updating = true;
+    chunk->UpdateCount++;
     m_UpdateChunks.emplace(chunk);
 }
 

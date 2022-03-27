@@ -116,9 +116,11 @@ void Terrain::Render(const glm::mat4& view) {
     m_TerrainShader->SetUniformMatrix4f("view",view);
     m_BlockTextures->Bind();
     for(auto chunk : ChunkManager::GetChunkMap()->GetChunks()){
-        m_TerrainShader->SetUniformInt("chunkX",chunk->GetChunkPosition().x);
-        m_TerrainShader->SetUniformInt("chunkZ",chunk->GetChunkPosition().z);
-        chunk->Render();
+        if(ChunkManager::IsChunkInViewDistance(chunk)){
+            m_TerrainShader->SetUniformInt("chunkX",chunk->Position.x);
+            m_TerrainShader->SetUniformInt("chunkZ",chunk->Position.z);
+            chunk->Render();
+        }
     }
 }
 

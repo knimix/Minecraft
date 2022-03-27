@@ -20,4 +20,5 @@ private:
     Button* m_LanguageButton = nullptr;
     Texture* m_Background = nullptr;
     Font* m_Font = nullptr;
+    bool m_ToggleDebug = false;
 };

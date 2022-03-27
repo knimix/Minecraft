@@ -1,6 +1,6 @@
-#include <iostream>
 #include "GameScene.h"
 #include "../World/Ray/Ray.h"
+#include "../Application/Application.h"
 
 GameScene::GameScene(IO *io) : Scene(io) {
     // m_BlockHighlight = new BlockHighlight(m_Terrain->GetPlayer()->GetCamera(),m_Terrain->GetProjection());
@@ -42,14 +42,14 @@ void GameScene::Update(double deltaTime) {
 
     ChunkManager::Update(deltaTime);
 
-    if(m_IO->KeyboardClicked[GLFW_KEY_G]){
-        auto chunk = ChunkManager::GetChunkMap()->GetChunk(Coordinate::ToChunkPosition(Coordinate::ToBlockPosition(m_Player->GetPosition())));
 
-        std::cout << "Current Chunk X: " << chunk->GetPosition().x << " Z: " << chunk->GetPosition().y << std::endl;
-        std::cout << chunk->m_FirstUpload << std::endl;
-        std::cout << chunk->m_Generated << std::endl;
-        std::cout << chunk->m_Uploaded << std::endl;
-        std::cout << chunk->m_BlockData.size() << std::endl;
+    if(m_IO->KeyboardClicked[GLFW_KEY_F3]){
+        m_ToggleDebug = !m_ToggleDebug;
+        if(m_ToggleDebug){
+            Application::SceneManager->LoadScene("DebugView");
+        }else{
+            Application::SceneManager->UnloadScene("DebugView");
+        }
     }
 
     Ray ray(m_Player->GetCamera()->GetCameraPosition(), m_Player->GetCamera()->GetCameraFront());
@@ -65,13 +65,20 @@ void GameScene::Update(double deltaTime) {
             break;
         }
 
+        if(blockPosition.y < 0 || blockPosition.y > 255){
+            continue;
+        }
 
         uint8_t block = chunk->GetBlock(localBlockPosition.x,localBlockPosition.y,localBlockPosition.z);
         if (block != 0) {
             m_BlockHighLight->SetPosition({blockPosition.x, blockPosition.y, blockPosition.z});
             if(m_IO->MouseClicked[GLFW_MOUSE_BUTTON_1]){
-                chunk->SetBlock(localBlockPosition.x,localBlockPosition.y,localBlockPosition.z,0);
-                ChunkUpdater::UpdateChunk(chunk);
+                ChunkManager::SetBlock(blockPosition.x, blockPosition.y, blockPosition.z,0);
+
+
+            }for(int x = blockPosition.x - 10; x <= blockPosition.x + 10;x++){
+
+                //ChunkUpdater::UpdateChunk(chunk);
             }
             if(m_IO->MouseClicked[GLFW_MOUSE_BUTTON_2]){
                 ray.StepBack();

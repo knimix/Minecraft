@@ -1,3 +1,4 @@
+#include <iostream>
 #include "MainMenuScene.h"
 #include "../Application/Application.h"
 

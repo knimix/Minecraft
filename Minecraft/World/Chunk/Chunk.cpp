@@ -1,61 +1,47 @@
-#include <iostream>
 #include "Chunk.h"
 #include "../WorldGenerator/WorldGenerator.h"
 #include "ChunkManager/ChunkManager.h"
 
 
 void Chunk::Create() {
-    if (!m_Initialized) {
-        m_VertexArray = new VertexArray();
-        m_ShaderBuffer = new ShaderBuffer();
-    }
-    m_Initialized = true;
+    m_VertexArray = new VertexArray();
+    m_ShaderBuffer = new ShaderBuffer();
+    Created = true;
 }
 
-void Chunk::Delete() {
-    if (m_Initialized) {
-        delete m_VertexArray;
-        delete m_ShaderBuffer;
-    }
-    m_Initialized = false;
-
+void Chunk::Destroy() {
+    delete m_VertexArray;
+    delete m_ShaderBuffer;
+    Created = false;
+    FirstUpdate = false;
 }
-
 
 void Chunk::Generate() {
-    if (m_Generated) {
-        return;
-    }
     for (uint8_t x = 0; x < CHUNK_SIZE; x++) {
-        for (uint8_t y = 0; y < CHUNK_HEIGHT; y++) {
+        for (uint16_t y = 0; y < CHUNK_HEIGHT; y++) {
             for (uint8_t z = 0; z < CHUNK_SIZE; z++) {
-                float posX = (m_X * CHUNK_SIZE) + x;
-                float posZ = (m_Z * CHUNK_SIZE) + z;
+                int64_t posX = (Position.x * CHUNK_SIZE) + x;
+                int64_t posZ = (Position.z * CHUNK_SIZE) + z;
                 SetBlock(x, y, z, WorldGenerator::GetDefaultBlock(posX, y, posZ));
             }
         }
     }
-    m_Generated = true;
+    Generated = true;
 }
-
 
 void Chunk::Update() {
     m_BlockDataBuffer.clear();
-    Chunk *leftChunk = ChunkManager::GetChunkMap()->GetChunk({m_X - 1, m_Z});
-    Chunk *rightChunk = ChunkManager::GetChunkMap()->GetChunk({m_X + 1, m_Z});
-    Chunk *frontChunk = ChunkManager::GetChunkMap()->GetChunk({m_X, m_Z + 1});
-    Chunk *backChunk = ChunkManager::GetChunkMap()->GetChunk({m_X, m_Z - 1});
 
-    // Chunk *leftChunk = nullptr;
-    // Chunk *rightChunk = nullptr;
-    //  Chunk *frontChunk = nullptr;
-    //  Chunk *backChunk = nullptr;
-
+    Chunk *leftChunk = ChunkManager::GetChunkMap()->GetChunk({Position.x - 1, Position.z});
+    Chunk *rightChunk = ChunkManager::GetChunkMap()->GetChunk({Position.x + 1, Position.z});
+    Chunk *frontChunk = ChunkManager::GetChunkMap()->GetChunk({Position.x, Position.z + 1});
+    Chunk *backChunk = ChunkManager::GetChunkMap()->GetChunk({Position.x, Position.z - 1});
+    m_Mutex.lock();
     for (uint8_t x = 0; x < CHUNK_SIZE; x++) {
-        for (uint8_t y = 0; y < CHUNK_HEIGHT; y++) {
+        for (uint16_t y = 0; y < CHUNK_HEIGHT; y++) {
             for (uint8_t z = 0; z < CHUNK_SIZE; z++) {
-                float posX = (m_X * CHUNK_SIZE) + x;
-                float posZ = (m_Z * CHUNK_SIZE) + z;
+                float posX = (Position.x * CHUNK_SIZE) + x;
+                float posZ = (Position.z * CHUNK_SIZE) + z;
                 uint8_t block = GetBlock(x, y, z);
 
                 if (block == 0) {
@@ -72,7 +58,7 @@ void Chunk::Update() {
                 if (x == 0) {
                     left = WorldGenerator::GetDefaultBlock(posX - 1, y, posZ);
                     if (leftChunk != nullptr) {
-                        if (leftChunk->m_Generated) {
+                        if (leftChunk->Generated) {
                             left = leftChunk->GetBlock(15, y, z);
                         }
                     }
@@ -80,7 +66,7 @@ void Chunk::Update() {
                 } else if (x == 15) {
                     right = WorldGenerator::GetDefaultBlock(posX + 1, y, posZ);
                     if (rightChunk != nullptr) {
-                        if (rightChunk->m_Generated) {
+                        if (rightChunk->Generated) {
                             right = rightChunk->GetBlock(0, y, z);
                         }
                     }
@@ -93,7 +79,7 @@ void Chunk::Update() {
                 if (z == 0) {
                     back = WorldGenerator::GetDefaultBlock(posX, y, posZ - 1);
                     if (backChunk != nullptr) {
-                        if (backChunk->m_Generated) {
+                        if (backChunk->Generated) {
                             back = backChunk->GetBlock(x, y, 15);
                         }
                     }
@@ -101,7 +87,7 @@ void Chunk::Update() {
                 } else if (z == 15) {
                     front = WorldGenerator::GetDefaultBlock(posX, y, posZ + 1);
                     if (frontChunk != nullptr) {
-                        if (frontChunk->m_Generated) {
+                        if (frontChunk->Generated) {
                             front = frontChunk->GetBlock(x, y, 0);
                         }
                     }
@@ -109,7 +95,6 @@ void Chunk::Update() {
                 } else {
                     front = GetBlock(x, y, z + 1);
                     back = GetBlock(x, y, z - 1);
-                    // back = WorldGenerator::GetDefaultBlock(posX,y,posZ-1);
                 }
 
                 if (y == 0) {
@@ -123,12 +108,7 @@ void Chunk::Update() {
                     top = GetBlock(x, y + 1, z);
                 }
                 if (top == 0) {
-                    if(x == 15 || x == 0 || z == 0 || z == 15){
-                        CreateFaceData(m_BlockDataBuffer, x, y, z, FACE_TOP, 3, 5);
-                    }else{
-                        CreateFaceData(m_BlockDataBuffer, x, y, z, FACE_TOP, block, 5);
-
-                    }
+                    CreateFaceData(m_BlockDataBuffer, x, y, z, FACE_TOP, block, 5);
                 }
                 if (bottom == 0) {
                     CreateFaceData(m_BlockDataBuffer, x, y, z, FACE_BOTTOM, block, 5);
@@ -148,35 +128,28 @@ void Chunk::Update() {
             }
         }
     }
-    m_Uploaded = false;
-
+    m_Mutex.unlock();
+    Uploaded = false;
 }
 
-void Chunk::LoadToGPU() {
-    m_BlockData = m_BlockDataBuffer;
-    m_VertexArray->Bind();
-    m_ShaderBuffer->Data(m_BlockData.data(), m_BlockData.size() * sizeof(int), GL_STATIC_DRAW);
-    m_Uploaded = true;
+void Chunk::Upload() {
+    if(Created){
+        Uploaded = true;
+        m_BlockData = m_BlockDataBuffer;
+        m_ShaderBuffer->Bind();
+        m_ShaderBuffer->Data(m_BlockData.data(), m_BlockData.size() * sizeof(int), GL_STATIC_DRAW);
+    }
 }
 
 void Chunk::Render() {
-    if (m_Initialized) {
-        if (!m_Uploaded && !m_Updating) {
-            LoadToGPU();
+    if(Created){
+        if(!Uploaded){
+            Upload();
         }
         m_VertexArray->Bind();
         m_ShaderBuffer->BindBufferBase(0);
         glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, m_BlockData.size() / 2);
     }
-
-}
-
-uint8_t Chunk::GetBlock(int x, int y, int z) {
-    return m_Blocks[x][y][z];
-}
-
-void Chunk::SetBlock(int x, int y, int z, uint8_t block) {
-    m_Blocks[x][y][z] = block;
 }
 
 void Chunk::CreateFaceData(std::vector<int> &data, uint8_t blockX, uint8_t blockY, uint8_t blockZ, uint8_t face,
@@ -185,15 +158,13 @@ void Chunk::CreateFaceData(std::vector<int> &data, uint8_t blockX, uint8_t block
     int second = (blockType << 24) | (lightLevel << 16) | (0 << 8) | (0 << 0);
     data.emplace_back(first);
     data.emplace_back(second);
-
 }
 
+uint8_t Chunk::GetBlock(uint8_t x, uint8_t y, uint8_t z) {
+    return m_Blocks[Coordinate::ToBlockIndex({x,y,z})];
+}
 
-
-
-
-
-
-
-
+void Chunk::SetBlock(uint8_t x, uint8_t y, uint8_t z, uint8_t block) {
+    m_Blocks[Coordinate::ToBlockIndex({x,y,z})] = block;
+}
 

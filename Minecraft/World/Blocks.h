@@ -1,5 +1,12 @@
 #pragma once
 
+#define FACE_FRONT 0
+#define FACE_BACK 1
+#define FACE_LEFT 2
+#define FACE_RIGHT 3
+#define FACE_TOP 4
+#define FACE_BOTTOM 5
+
 #define BLOCK_AIR 0
 #define BLOCK_GRASS 1
 #define BLOCK_DIRT 2
