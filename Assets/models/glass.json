@@ -1,0 +1,43 @@
+{
+	"id": 5,
+    "transparent": true,
+	"name": "glass",
+	"faces": [
+      
+			
+			{
+				"type": "top",
+				"texture": "glass"
+            },
+{
+				"type": "bottom",
+				"texture": "glass"
+            },
+			{
+				"type": "left",
+				"texture": "glass"
+            },
+			{
+				"type": "right",
+				"texture": "glass"
+            },
+			{
+				"type": "front",
+				"texture": "glass"
+            },
+			{
+				"type": "back",
+				"texture": "glass"
+            }
+			
+			
+			
+		
+		
+			
+            
+            
+        ]
+	
+	
+}
