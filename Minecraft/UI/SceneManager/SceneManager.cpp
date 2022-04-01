@@ -106,6 +106,7 @@ void SceneManager::RenderUI() {
     glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
+    glDisable(GL_ALPHA_TEST);
     std::unordered_map<std::string,Scene*>::iterator it;
     m_Renderer2D->BeginBatch();
 

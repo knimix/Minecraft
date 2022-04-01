@@ -1,44 +1,49 @@
 #include "TextureMatrix.h"
 #include "../Core.h"
-#include "Texture.h"
 
 
 TextureMatrix::~TextureMatrix() {
     glDeleteTextures(1, &m_Texture);
-    for(uint8_t* texture : m_Textures){
-        Texture::FreeTextureData(texture);
-    }
+
 }
 
 void TextureMatrix::Bind() {
     glBindTexture(GL_TEXTURE_2D, m_Texture);
 }
 
-void TextureMatrix::AddBlockTexture(const BlockTexture &blockTexture) {
-    m_Textures.emplace_back(blockTexture.Front);
-    m_Textures.emplace_back(blockTexture.Back);
-    m_Textures.emplace_back(blockTexture.Left);
-    m_Textures.emplace_back(blockTexture.Right);
-    m_Textures.emplace_back(blockTexture.Top);
-    m_Textures.emplace_back(blockTexture.Bottom);
+void TextureMatrix::AddData(const char* name, uint8_t* data) {
+    m_Data.insert(std::make_pair(name,data));
 }
 
 void TextureMatrix::Create(int width, int height, int mipmapLevel) {
-    if(m_Textures.empty()){
+    if(m_Data.empty()){
         return;
     }
+    m_Index.clear();
     glGenTextures(1, &m_Texture);
     glBindTexture(GL_TEXTURE_2D_ARRAY,m_Texture);
 
-    //glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, 1, 1, 1);
+    glTexImage3D(GL_TEXTURE_2D_ARRAY,0,GL_RGBA,width, height, m_Data.size(), 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 
-    glTexImage3D(GL_TEXTURE_2D_ARRAY,0,GL_RGBA,width, height, m_Textures.size(), 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-
-    for (int i = 0; i<m_Textures.size(); i++) {
-        glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, i, width, height, 1,GL_RGBA, GL_UNSIGNED_BYTE,m_Textures[i]);
+    int index = 0;
+    for (const auto& data : m_Data) {
+        glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, index, width, height, 1,GL_RGBA, GL_UNSIGNED_BYTE,data.second);
+        m_Index.insert(std::make_pair(data.first,index));
+        free(data.second);
+        index++;
     }
     glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
 
+}
+
+uint16_t TextureMatrix::GetIndex(const char *name) {
+    auto it = m_Index.find(name);
+    if(it != m_Index.end()){
+        return it->second;
+    }
+    return 0;
 }

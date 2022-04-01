@@ -9,6 +9,9 @@ MainMenuScene::MainMenuScene(IO *io) : Scene(io) {
 void MainMenuScene::Load() {
     Scene::Load();
 
+
+
+
     auto buttonTexture = AddTexture("../Assets/Textures/Ui/widgets.png");
     m_Background = AddTexture("../Assets/Textures/Ui/background.png");
     m_Font = FontManager::GetFont("default");

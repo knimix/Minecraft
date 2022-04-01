@@ -3,9 +3,9 @@
 #include "../../OpenGL/Shader.h"
 #include "../../UI/IO/IO.h"
 #include "../Chunk/ChunkManager/ChunkManager.h"
-#include "../../Texture/TextureMatrix.h"
 #include <unordered_map>
 #include <queue>
+#include <map>
 
 class Terrain {
 public:
@@ -16,6 +16,5 @@ public:
     void Render(const glm::mat4& view);
     static int ViewDistance;
 private:
-    TextureMatrix* m_BlockTextures = nullptr;
     Shader* m_TerrainShader = nullptr;
 };

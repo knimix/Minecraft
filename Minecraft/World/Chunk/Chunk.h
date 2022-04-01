@@ -1,7 +1,6 @@
 #pragma once
 #include "../../OpenGL/Buffer.h"
 #include "Coordinate.h"
-#include "../Blocks.h"
 #include <atomic>
 #include <array>
 
@@ -18,6 +17,7 @@ public:
     void Render();
     uint8_t GetBlock(uint8_t x, uint8_t y, uint8_t z);
     void SetBlock(uint8_t x, uint8_t y, uint8_t z, uint8_t block);
+    bool NeighboursGenerated();
     ChunkPosition Position;
     std::atomic_bool Created = false;
     std::atomic_bool Generating = false;
@@ -27,8 +27,9 @@ public:
     std::atomic_bool Uploaded = true;
     std::atomic_bool Accessed = false;
     bool FirstUpdate = false;
+    inline std::vector<int>& GetBlockBuffer() {return m_BlockData;}
 private:
-    void CreateFaceData(std::vector<int>& data, uint8_t blockX, uint8_t blockY, uint8_t blockZ, uint8_t face, uint8_t blockType, uint8_t lightLevel);
+    void CreateFaceData(std::vector<int>& data, uint8_t blockX, uint8_t blockY, uint8_t blockZ, uint8_t faceType, uint8_t lightLevel, uint16_t textureIndex,  int8_t offsetX, int8_t offsetY, int8_t offsetZ,uint8_t width, uint8_t height);
     VertexArray* m_VertexArray = nullptr;
     ShaderBuffer* m_ShaderBuffer = nullptr;
     mutable std::mutex m_Mutex;

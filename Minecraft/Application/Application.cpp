@@ -4,28 +4,22 @@
 #include "../GameScenes/MainMenuScene.h"
 #include "../GameScenes/InGame/DebugScene.h"
 #include "../UI/FontManager/FontManager.h"
+#include "../Resources/ResourceManager/ResourceManager.h"
 
 static bool s_Run = true;
 SceneManager* Application::SceneManager;
 
 Application::Application() {
+
     srand(time(NULL));
     m_Window = new Window(1600,900,"Minecraft Clone V3");
 
-  /*  IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void) io;
-    ImGui::StyleColorsDark();
-    ImGui_ImplGlfw_InitForOpenGL(m_Window->GetBaseWindow(), true);
-    ImGui_ImplOpenGL3_Init();*/
 
-  std::cout << glGetString(GL_RENDERER) << std::endl;
-//  std::cout << glGetString(GL_CONTEXT_PROFILE_MASK_ARB) << std::endl;
+    ResourceManager::Initialize();
 
-   FontManager::AddFont("default",new Font("../Assets/Fonts/MinecraftRegular-Bmg3.otf",25));
-   FontManager::AddFont("draw",new Font("../Assets/Fonts/MinecraftRegular-Bmg3.otf",28));
-   // new Font("../Assets/Fonts/arial.ttf",40);
-   // new Font("../Assets/Fonts/Minecraft.ttf",20);
+    FontManager::AddFont("default",new Font("../Assets/Fonts/MinecraftRegular-Bmg3.otf",25));
+    FontManager::AddFont("draw",new Font("../Assets/Fonts/MinecraftRegular-Bmg3.otf",28));
+
     SceneManager = new class SceneManager(m_Window->GetIO());
 
 
@@ -38,6 +32,7 @@ Application::Application() {
 }
 Application::~Application() {
     FontManager::Terminate();
+    ResourceManager::Shutdown();
     delete m_Window;
     delete m_Terrain;
 }

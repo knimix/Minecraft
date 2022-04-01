@@ -1,6 +1,9 @@
 #include "Chunk.h"
 #include "../WorldGenerator/WorldGenerator.h"
 #include "ChunkManager/ChunkManager.h"
+#include "../../Resources/BlockManager/BlockManager.h"
+#include <iostream>
+#include <bitset>
 
 
 void Chunk::Create() {
@@ -22,7 +25,9 @@ void Chunk::Generate() {
             for (uint8_t z = 0; z < CHUNK_SIZE; z++) {
                 int64_t posX = (Position.x * CHUNK_SIZE) + x;
                 int64_t posZ = (Position.z * CHUNK_SIZE) + z;
-                SetBlock(x, y, z, WorldGenerator::GetDefaultBlock(posX, y, posZ));
+                if (GetBlock(x, y, z) == 0) {
+                    SetBlock(x, y, z, WorldGenerator::GetDefaultBlock(posX, y, posZ));
+                }
             }
         }
     }
@@ -32,21 +37,24 @@ void Chunk::Generate() {
 void Chunk::Update() {
     m_BlockDataBuffer.clear();
 
-    Chunk *leftChunk = ChunkManager::GetChunkMap()->GetChunk({Position.x - 1, Position.z},true);
-    Chunk *rightChunk = ChunkManager::GetChunkMap()->GetChunk({Position.x + 1, Position.z},true);
-    Chunk *frontChunk = ChunkManager::GetChunkMap()->GetChunk({Position.x, Position.z + 1},true);
-    Chunk *backChunk = ChunkManager::GetChunkMap()->GetChunk({Position.x, Position.z - 1},true);
+    Chunk *leftChunk = ChunkManager::GetChunkMap()->GetChunk({Position.x - 1, Position.z}, true);
+    Chunk *rightChunk = ChunkManager::GetChunkMap()->GetChunk({Position.x + 1, Position.z}, true);
+    Chunk *frontChunk = ChunkManager::GetChunkMap()->GetChunk({Position.x, Position.z + 1}, true);
+    Chunk *backChunk = ChunkManager::GetChunkMap()->GetChunk({Position.x, Position.z - 1}, true);
     m_Mutex.lock();
     for (uint8_t x = 0; x < CHUNK_SIZE; x++) {
         for (uint16_t y = 0; y < CHUNK_HEIGHT; y++) {
             for (uint8_t z = 0; z < CHUNK_SIZE; z++) {
-                float posX = (Position.x * CHUNK_SIZE) + x;
-                float posZ = (Position.z * CHUNK_SIZE) + z;
                 uint8_t block = GetBlock(x, y, z);
-
-                if (block == 0) {
+                if(block == 0){
                     continue;
                 }
+
+                if(!BlockManager::BlockExits(block)){
+                    continue;
+                }
+                auto blockData = BlockManager::GetBlock(block);
+
 
                 uint8_t right = 1;
                 uint8_t left = 1;
@@ -56,19 +64,15 @@ void Chunk::Update() {
                 uint8_t bottom = 1;
 
                 if (x == 0) {
-                    left = WorldGenerator::GetDefaultBlock(posX - 1, y, posZ);
                     if (leftChunk != nullptr) {
-                        if (leftChunk->Generated) {
-                            left = leftChunk->GetBlock(15, y, z);
-                        }
+                        left = leftChunk->GetBlock(15, y, z);
+
                     }
                     right = GetBlock(x + 1, y, z);
                 } else if (x == 15) {
-                    right = WorldGenerator::GetDefaultBlock(posX + 1, y, posZ);
                     if (rightChunk != nullptr) {
-                        if (rightChunk->Generated) {
-                            right = rightChunk->GetBlock(0, y, z);
-                        }
+                        right = rightChunk->GetBlock(0, y, z);
+
                     }
                     left = GetBlock(x - 1, y, z);
                 } else {
@@ -77,19 +81,15 @@ void Chunk::Update() {
                 }
 
                 if (z == 0) {
-                    back = WorldGenerator::GetDefaultBlock(posX, y, posZ - 1);
                     if (backChunk != nullptr) {
-                        if (backChunk->Generated) {
-                            back = backChunk->GetBlock(x, y, 15);
-                        }
+                        back = backChunk->GetBlock(x, y, 15);
+
                     }
                     front = GetBlock(x, y, z + 1);
                 } else if (z == 15) {
-                    front = WorldGenerator::GetDefaultBlock(posX, y, posZ + 1);
                     if (frontChunk != nullptr) {
-                        if (frontChunk->Generated) {
-                            front = frontChunk->GetBlock(x, y, 0);
-                        }
+                        front = frontChunk->GetBlock(x, y, 0);
+
                     }
                     back = GetBlock(x, y, z - 1);
                 } else {
@@ -107,24 +107,38 @@ void Chunk::Update() {
                     bottom = GetBlock(x, y - 1, z);
                     top = GetBlock(x, y + 1, z);
                 }
-                if (top == 0) {
-                    CreateFaceData(m_BlockDataBuffer, x, y, z, FACE_TOP, block, 5);
+
+                for (auto &face: blockData.Faces) {
+
+                    if (top == 0 && face.FaceType == FACE_TOP) {
+                        CreateFaceData(m_BlockDataBuffer, x, y, z, FACE_TOP, 0, face.Texture,face.OffsetX, face.OffsetY,face.OffsetZ, face.Width, face.Height);
+                    }
+                    if (bottom == 0 && face.FaceType == FACE_BOTTOM) {
+                        CreateFaceData(m_BlockDataBuffer, x, y, z, FACE_BOTTOM, 0, face.Texture, face.OffsetX, face.OffsetY,face.OffsetZ, face.Width, face.Height);
+                    }
+                    if (left == 0 && face.FaceType == FACE_LEFT) {
+                        CreateFaceData(m_BlockDataBuffer, x, y, z,  FACE_LEFT, 0, face.Texture, face.OffsetX, face.OffsetY,face.OffsetZ, face.Width, face.Height);
+                    }
+                    if (right == 0 && face.FaceType == FACE_RIGHT) {
+                        CreateFaceData(m_BlockDataBuffer, x, y, z, FACE_RIGHT, 0, face.Texture, face.OffsetX, face.OffsetY,face.OffsetZ, face.Width, face.Height);
+                    }
+                    if (front == 0 && face.FaceType == FACE_FRONT) {
+                        CreateFaceData(m_BlockDataBuffer, x, y, z , FACE_FRONT, 0, face.Texture , face.OffsetX, face.OffsetY,face.OffsetZ, face.Width, face.Height);
+                    }
+                    if (back == 0 && face.FaceType == FACE_BACK) {
+                        CreateFaceData(m_BlockDataBuffer, x, y, z,FACE_BACK, 0, face.Texture, face.OffsetX, face.OffsetY,face.OffsetZ, face.Width, face.Height);
+                    }
+                    if(face.FaceType == FACE_ROTATED_LEFT){
+                        CreateFaceData(m_BlockDataBuffer, x, y, z, FACE_ROTATED_LEFT, 0, face.Texture, face.OffsetX, face.OffsetY,face.OffsetZ, face.Width, face.Height);
+
+                    }
+                    if(face.FaceType == FACE_ROTATED_RIGHT){
+                        CreateFaceData(m_BlockDataBuffer, x, y, z, FACE_ROTATED_RIGHT, 0, face.Texture, face.OffsetX, face.OffsetY,face.OffsetZ, face.Width, face.Height);
+
+                    }
                 }
-                if (bottom == 0) {
-                    CreateFaceData(m_BlockDataBuffer, x, y, z, FACE_BOTTOM, block, 5);
-                }
-                if (left == 0) {
-                    CreateFaceData(m_BlockDataBuffer, x, y, z, FACE_LEFT, block, 5);
-                }
-                if (right == 0) {
-                    CreateFaceData(m_BlockDataBuffer, x, y, z, FACE_RIGHT, block, 5);
-                }
-                if (front == 0) {
-                    CreateFaceData(m_BlockDataBuffer, x, y, z, FACE_FRONT, block, 5);
-                }
-                if (back == 0) {
-                    CreateFaceData(m_BlockDataBuffer, x, y, z, FACE_BACK, block, 5);
-                }
+
+
             }
         }
     }
@@ -137,7 +151,7 @@ void Chunk::Update() {
 }
 
 void Chunk::Upload() {
-    if(Created){
+    if (Created) {
         Uploaded = true;
         m_BlockData = m_BlockDataBuffer;
         m_ShaderBuffer->Bind();
@@ -146,29 +160,52 @@ void Chunk::Upload() {
 }
 
 void Chunk::Render() {
-    if(Created){
-        if(!Uploaded){
+    if (Created) {
+        if (!Uploaded) {
             Upload();
         }
         m_VertexArray->Bind();
         m_ShaderBuffer->BindBufferBase(0);
-        glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, m_BlockData.size() / 2);
+        glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, m_BlockData.size() / 3);
     }
 }
 
-void Chunk::CreateFaceData(std::vector<int> &data, uint8_t blockX, uint8_t blockY, uint8_t blockZ, uint8_t face,
-                           uint8_t blockType, uint8_t lightLevel) {
-    int first = (blockX << 24) | (blockY << 16) | (blockZ << 8) | (face << 0);
-    int second = (blockType << 24) | (lightLevel << 16) | (0 << 8) | (0 << 0);
+
+void Chunk::CreateFaceData(std::vector<int>& data, uint8_t blockX, uint8_t blockY, uint8_t blockZ, uint8_t faceType, uint8_t lightLevel, uint16_t textureIndex,  int8_t offsetX, int8_t offsetY, int8_t offsetZ,uint8_t width, uint8_t height) {
+
+    int first = (blockX << 24) | (blockY << 16) | (blockZ << 8) | (faceType << 4) | (lightLevel << 0) ;
+    int second = (textureIndex << 24) | (width << 16) | (height << 8) | (0 << 0);
+
+
+
+
+    using U = std::uint8_t;
+    int third  = (U(offsetX) << 24) | (U(offsetY) << 16) | (U(offsetZ) << 8) | (0 << 0);
+   // std::cout << (int)(third & 0xFF000000 >> 24) << " "<< (int)(third  & 0x00FF0000 >> 16 )<< " " << (int)(third & 0x0000FF00 >> 8)  << std::endl;
+
     data.emplace_back(first);
     data.emplace_back(second);
+    data.emplace_back(third);
+
 }
 
 uint8_t Chunk::GetBlock(uint8_t x, uint8_t y, uint8_t z) {
-    return m_Blocks[Coordinate::ToBlockIndex({x,y,z})];
+    return m_Blocks[Coordinate::ToBlockIndex({x, y, z})];
 }
 
 void Chunk::SetBlock(uint8_t x, uint8_t y, uint8_t z, uint8_t block) {
-    m_Blocks[Coordinate::ToBlockIndex({x,y,z})] = block;
+    m_Blocks[Coordinate::ToBlockIndex({x, y, z})] = block;
 }
+
+bool Chunk::NeighboursGenerated() {
+    Chunk *leftChunk = ChunkManager::GetChunkMap()->GetChunk({Position.x - 1, Position.z});
+    Chunk *rightChunk = ChunkManager::GetChunkMap()->GetChunk({Position.x + 1, Position.z});
+    Chunk *frontChunk = ChunkManager::GetChunkMap()->GetChunk({Position.x, Position.z + 1});
+    Chunk *backChunk = ChunkManager::GetChunkMap()->GetChunk({Position.x, Position.z - 1});
+    if (leftChunk == nullptr || rightChunk == nullptr || frontChunk == nullptr || backChunk == nullptr) {
+        return false;
+    }
+    return leftChunk->Generated && rightChunk->Generated && frontChunk->Generated && backChunk->Generated;
+}
+
 

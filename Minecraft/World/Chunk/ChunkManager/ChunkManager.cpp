@@ -4,7 +4,7 @@
 static ChunkMap *s_ChunkMap = nullptr;
 static ChunkUpdater *s_ChunkUpdater = nullptr;
 static ChunkGenerator *s_ChunkGenerator = nullptr;
-static int s_ViewDistance = 12;
+static int s_ViewDistance = 16;
 static int s_PreCreateDistance = 1;
 static int s_Seed = 99;
 static Camera *s_Camera = nullptr;
@@ -19,6 +19,7 @@ void PreCreateChunks(const ChunkPosition &center) {
             if (!s_ChunkMap->ChunkExist(chunkPosition)) {
                 auto chunk = new Chunk(chunkPosition);
                 s_ChunkMap->AddChunk(chunk, chunkPosition);
+                ChunkGenerator::GenerateChunk(chunk);
             }
         }
     }
@@ -30,7 +31,7 @@ void PreCreateChunks(const ChunkPosition &center) {
 void ChunkManager::Initialize(int seed) {
     s_ChunkMap = new ChunkMap();
     s_ChunkUpdater = new ChunkUpdater(1);
-    s_ChunkGenerator = new ChunkGenerator(2);
+    s_ChunkGenerator = new ChunkGenerator(4);
     s_Seed = seed;
 }
 
@@ -42,15 +43,14 @@ void ChunkManager::Shutdown() {
 void ChunkManager::Update(double delaTime) {
     auto chunkPosition = Coordinate::ToChunkPosition(Coordinate::ToBlockPosition(s_Camera->GetCameraPosition()));
 
+    PreCreateChunks(chunkPosition);
+
     for(auto chunk : s_ChunkMap->GetChunks()){
         if(IsChunkInViewDistance(chunk)){
             if(!chunk->Created){
                 chunk->Create();
             }else{
-                if(!chunk->Generated && !chunk->Generating){
-                    ChunkGenerator::GenerateChunk(chunk);
-                }
-                if(chunk->Generated && !chunk->FirstUpdate){
+                if(chunk->Generated && chunk->NeighboursGenerated() && !chunk->FirstUpdate){
                     chunk->FirstUpdate = true;
                     ChunkUpdater::UpdateChunk(chunk);
                 }
@@ -70,7 +70,6 @@ void ChunkManager::Update(double delaTime) {
         }
     }
 
-    PreCreateChunks(chunkPosition);
 
 }
 

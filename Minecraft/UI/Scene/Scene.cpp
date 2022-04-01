@@ -40,7 +40,8 @@ Button* Scene::AddComponent<Button>(){
 }
 
 Texture *Scene::AddTexture(const char *path) {
-    auto texture = new Texture(path);
+    auto texture = new Texture();
+    texture->Load(path);
     m_Textures.emplace_back(texture);
     return texture;
 }
