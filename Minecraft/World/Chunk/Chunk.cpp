@@ -49,11 +49,10 @@ void Chunk::Update() {
                 if(block == 0){
                     continue;
                 }
-
                 if(!BlockManager::BlockExits(block)){
                     continue;
                 }
-                auto blockData = BlockManager::GetBlock(block);
+                const auto& blockData = BlockManager::GetBlock(block);
 
 
                 uint8_t right = 1;
@@ -107,25 +106,31 @@ void Chunk::Update() {
                     bottom = GetBlock(x, y - 1, z);
                     top = GetBlock(x, y + 1, z);
                 }
+                const auto&  blockTop = BlockManager::GetBlock(top);
+                const auto&  blockBottom = BlockManager::GetBlock(bottom);
+                const auto&  blockLeft = BlockManager::GetBlock(left);
+                const auto&  blockRight = BlockManager::GetBlock(right);
+                const auto&  blockFront =  BlockManager::GetBlock(front);
+                const auto&  blockBack =  BlockManager::GetBlock(back);
 
                 for (auto &face: blockData.Faces) {
 
-                    if (top == 0 && face.FaceType == FACE_TOP) {
+                    if ((top == 0 || (blockTop.Transparent && !blockData.Transparent)) && face.FaceType == FACE_TOP ) {
                         CreateFaceData(m_BlockDataBuffer, x, y, z, FACE_TOP, 0, face.Texture,face.OffsetX, face.OffsetY,face.OffsetZ, face.Width, face.Height);
                     }
-                    if (bottom == 0 && face.FaceType == FACE_BOTTOM) {
+                    if ((bottom == 0 || (blockBottom.Transparent&& !blockData.Transparent)) && face.FaceType == FACE_BOTTOM ) {
                         CreateFaceData(m_BlockDataBuffer, x, y, z, FACE_BOTTOM, 0, face.Texture, face.OffsetX, face.OffsetY,face.OffsetZ, face.Width, face.Height);
                     }
-                    if (left == 0 && face.FaceType == FACE_LEFT) {
+                    if ((left == 0 || (blockLeft.Transparent&& !blockData.Transparent)) && face.FaceType == FACE_LEFT) {
                         CreateFaceData(m_BlockDataBuffer, x, y, z,  FACE_LEFT, 0, face.Texture, face.OffsetX, face.OffsetY,face.OffsetZ, face.Width, face.Height);
                     }
-                    if (right == 0 && face.FaceType == FACE_RIGHT) {
+                    if ((right == 0 || (blockRight.Transparent&& !blockData.Transparent)) && face.FaceType == FACE_RIGHT) {
                         CreateFaceData(m_BlockDataBuffer, x, y, z, FACE_RIGHT, 0, face.Texture, face.OffsetX, face.OffsetY,face.OffsetZ, face.Width, face.Height);
                     }
-                    if (front == 0 && face.FaceType == FACE_FRONT) {
+                    if ((front == 0 || (blockFront.Transparent&& !blockData.Transparent)) && face.FaceType == FACE_FRONT) {
                         CreateFaceData(m_BlockDataBuffer, x, y, z , FACE_FRONT, 0, face.Texture , face.OffsetX, face.OffsetY,face.OffsetZ, face.Width, face.Height);
                     }
-                    if (back == 0 && face.FaceType == FACE_BACK) {
+                    if ((back == 0 || (blockBack.Transparent&& !blockData.Transparent)) && face.FaceType == FACE_BACK ) {
                         CreateFaceData(m_BlockDataBuffer, x, y, z,FACE_BACK, 0, face.Texture, face.OffsetX, face.OffsetY,face.OffsetZ, face.Width, face.Height);
                     }
                     if(face.FaceType == FACE_ROTATED_LEFT){

@@ -1,7 +1,7 @@
 #pragma once
-#include "../../../OpenGL/Buffer.h"
-#include "../../../OpenGL/Shader.h"
-#include "../../../Camera/Camera.h"
+#include "../../OpenGL/Buffer.h"
+#include "../../OpenGL/Shader.h"
+#include "../../Camera/Camera.h"
 class BlockHighlight {
 public:
     BlockHighlight(const glm::mat4& projection);

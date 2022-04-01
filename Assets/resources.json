@@ -6,13 +6,15 @@
             "stone": "stone.png",
 			"debug": "debug.png",
 			"grass": "grass.png",
-			"poppy": "poppy.png"
+			"poppy": "poppy.png",
+			"glass": "glass.png"
         },
 		"BlockModels":[
 			"grass.json",
 			"grass_block.json",
 			"stone.json",
-			"dirt.json"
+			"dirt.json",
+			"glass.json"
 		]
         
     

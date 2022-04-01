@@ -91,24 +91,6 @@ uint8_t WorldGenerator::GetDefaultBlock(int64_t x, int64_t y, int64_t z) {
     }*/
       int height = int(((m_Noise.GetNoise(x, z) + 1.0f) / 2.0f) * 60);
 
-      if(y == height){
-          int randNum = rand()%(1000-0 + 1) + 0;
-          if(randNum <= 9){
-             // PlaceTree(x,y,z);
-
-          }else{
-              randNum = rand()%(1000-0 + 1) + 0;
-              if(randNum <= 50){
-                //  SetBlockAt(x,y+1,z,11);
-              }else{
-                  randNum = rand()%(1000-0 + 1) + 0;
-                  if(randNum <= 100){
-                     // SetBlockAt(x,y+1,z,12);
-                  }
-              }
-          }
-      }
-
       if (y > height || y < 0) {
           return 0;
       } else if (y == height) {

@@ -1,7 +1,7 @@
 #pragma once
 #include "../UI/Scene/Scene.h"
 #include "../World/Terrain/Terrain.h"
-#include "../World/Chunk/BlockHighlight/BlockHighlight.h"
+#include "../World/BlockHighlight/BlockHighlight.h"
 #include "../World/Chunk/ChunkManager/ChunkManager.h"
 #include "../Player/Player.h"
 

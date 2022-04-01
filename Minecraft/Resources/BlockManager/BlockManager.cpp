@@ -7,7 +7,7 @@ std::vector<Block> s_Blocks;
 void BlockManager::Initialize() {
     Block air;
     air.ID = 0;
-    air.Name = nullptr;
+    //air.Name = nullptr;
     air.Solid = false;
     air.Transparent = true;
     air.Transparency = 15;
@@ -55,7 +55,7 @@ bool BlockManager::LoadBlock(const char *path) {
     Block block;
     auto name = blockData["name"];
     if(!name.is_null() && name.is_string()){
-        block.Name = name.get<std::string>().c_str();
+       // block.Name = name.get<std::string>().c_str();
     }
     auto id = blockData["id"];
     if(!id.is_null() && id.is_number_integer()){
@@ -124,5 +124,5 @@ bool BlockManager::BlockExits(uint16_t id) {
     return id < s_Blocks.size();
 }
 Block& BlockManager::GetBlock(uint16_t id) {
-    return s_Blocks.at(id);
+    return s_Blocks[id];
 }

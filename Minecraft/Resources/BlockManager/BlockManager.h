@@ -22,7 +22,6 @@ struct Face{
 
 struct Block{
     uint16_t ID = 0;
-    const char* Name = nullptr;
     bool Solid = true;
     bool Transparent = false;
     uint8_t Transparency = 0;

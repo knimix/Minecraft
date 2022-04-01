@@ -1,6 +1,6 @@
 #pragma once
 #include "../../OpenGL/Buffer.h"
-#include "Coordinate.h"
+#include "../Coordinate.h"
 #include <atomic>
 #include <array>
 

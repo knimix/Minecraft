@@ -1,15 +1,16 @@
 {
 	"id": 4,
+	"transparent": true,
 	"name": "grass",
 	"faces": [
             {
 				"type": "rotated_left",
-				"texture": "poppy",
+				"texture": "grass",
                 "cull": true
             },
 			{
 				"type": "rotated_right",
-				"texture": "poppy",
+				"texture": "grass",
                 "cull": true
             }
             

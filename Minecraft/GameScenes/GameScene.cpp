@@ -35,35 +35,7 @@ void GameScene::Unload() {
     glfwSetInputMode(reinterpret_cast<GLFWwindow *>(m_IO->Window), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     Scene::Unload();
 }
-int calcOrder( const glm::vec3 & dir )
-{
-    int signs;
 
-    const int   sx = dir.x<0.0f;
-    const int   sy = dir.y<0.0f;
-    const int   sz = dir.z<0.0f;
-    const float ax = fabsf( dir.x );
-    const float ay = fabsf( dir.y );
-    const float az = fabsf( dir.z );
-
-    if( ax>ay && ax>az )
-    {
-        if( ay>az ) signs = 0 + ((sx<<2)|(sy<<1)|sz);
-        else        signs = 8 + ((sx<<2)|(sz<<1)|sy);
-    }
-    else if( ay>az )
-    {
-        if( ax>az ) signs = 16 + ((sy<<2)|(sx<<1)|sz);
-        else        signs = 24 + ((sy<<2)|(sz<<1)|sx);
-    }
-    else
-    {
-        if( ax>ay ) signs = 32 + ((sz<<2)|(sx<<1)|sy);
-        else        signs = 40 + ((sz<<2)|(sy<<1)|sx);
-    }
-
-    return signs;
-}
 void GameScene::Update(double deltaTime) {
     Scene::Update(deltaTime);
 
@@ -73,28 +45,6 @@ void GameScene::Update(double deltaTime) {
 
     ChunkManager::Update(deltaTime);
 
-
-    if(m_IO->Mouse[GLFW_MOUSE_BUTTON_3]){
-        auto front = m_Player->GetCamera()->GetCameraFront();
-
-
-    /*    if(front.z >= 0 && front.z <= 1){
-          //  std::cout << "front!\n";
-        }
-        if(front.z <= 0 && front.z >= -1){
-            //std::cout << "back!\n";
-        }
-
-        if(front.x >= 0 && front.x <= 1){
-            std::cout << "left!\n";
-        }
-        if(front.x <= 0 && front.x >= -1){
-            std::cout << "right!\n";
-        }*/
-
-
-        std::cout << "Direction X: " << front.x << std::endl;
-    }
 
 
     if(m_IO->KeyboardClicked[GLFW_KEY_F3]){
