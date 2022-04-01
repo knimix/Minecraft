@@ -1,0 +1,42 @@
+{
+	"id": 3,
+	"name": "stone",
+	"faces": [
+      
+			
+			{
+				"type": "top",
+				"texture": "stone"
+            },
+{
+				"type": "bottom",
+				"texture": "stone"
+            },
+			{
+				"type": "left",
+				"texture": "stone"
+            },
+			{
+				"type": "right",
+				"texture": "stone"
+            },
+			{
+				"type": "front",
+				"texture": "stone"
+            },
+			{
+				"type": "back",
+				"texture": "stone"
+            }
+			
+			
+			
+		
+		
+			
+            
+            
+        ]
+	
+	
+}

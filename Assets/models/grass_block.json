@@ -1,0 +1,35 @@
+{
+	"id": 2,
+	"name": "grass_block",
+	"faces": [
+            {
+				"type": "top",
+				"texture": "grass_block_top",
+                "cull": true
+            },
+			{
+				"type": "front",
+				"texture": "grass_block_side",
+                "cull": true
+            },
+			{
+				"type": "back",
+				"texture": "grass_block_side",
+                "cull": true
+            },
+			{
+				"type": "left",
+				"texture": "grass_block_side",
+                "cull": true
+            },
+			{
+				"type": "right",
+				"texture": "grass_block_side",
+                "cull": true
+            }
+            
+            
+        ]
+	
+	
+}

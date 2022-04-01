@@ -1,0 +1,20 @@
+{
+	"id": 4,
+	"name": "grass",
+	"faces": [
+            {
+				"type": "rotated_left",
+				"texture": "poppy",
+                "cull": true
+            },
+			{
+				"type": "rotated_right",
+				"texture": "poppy",
+                "cull": true
+            }
+            
+            
+        ]
+	
+	
+}

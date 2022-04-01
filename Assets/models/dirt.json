@@ -1,0 +1,42 @@
+{
+	"id": 2,
+	"name": "dirt",
+	"faces": [
+      
+			
+			{
+				"type": "top",
+				"texture": "dirt"
+            },
+{
+				"type": "bottom",
+				"texture": "dirt"
+            },
+			{
+				"type": "left",
+				"texture": "dirt"
+            },
+			{
+				"type": "right",
+				"texture": "dirt"
+            },
+			{
+				"type": "front",
+				"texture": "dirt"
+            },
+			{
+				"type": "back",
+				"texture": "dirt"
+            }
+			
+			
+			
+		
+		
+			
+            
+            
+        ]
+	
+	
+}

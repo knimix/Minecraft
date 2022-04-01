@@ -1,0 +1,19 @@
+{
+        "FaceTextures": {
+            "dirt": "dirt.png",
+            "grass_block_side": "grass_block_side.png",
+            "grass_block_top": "grass_block_top.png",
+            "stone": "stone.png",
+			"debug": "debug.png",
+			"grass": "grass.png",
+			"poppy": "poppy.png"
+        },
+		"BlockModels":[
+			"grass.json",
+			"grass_block.json",
+			"stone.json",
+			"dirt.json"
+		]
+        
+    
+}
