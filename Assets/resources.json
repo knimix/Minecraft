@@ -7,14 +7,30 @@
 			"debug": "debug.png",
 			"grass": "grass.png",
 			"poppy": "poppy.png",
-			"glass": "glass.png"
+			"glass": "glass.png",
+			"leaves": "leaves.png",
+			"oak_log": "oak_log.png",
+			"oak_log_top": "oak_log_top.png",
+			"red_tulip": "red_tulip.png",
+			"white_tulip": "white_tulip.png",
+			"orange_tulip": "orange_tulip.png",
+			"pink_tulip": "pink_tulip.png",
+			"blue_orchid": "blue_orchid.png"
         },
 		"BlockModels":[
 			"grass.json",
 			"grass_block.json",
 			"stone.json",
 			"dirt.json",
-			"glass.json"
+			"glass.json",
+			"oak_log.json",
+			"leaves.json",
+			"poppy.json",
+			"red_tulip.json",
+			"white_tulip.json",
+			"orange_tulip.json",
+			"pink_tulip.json",
+			"blue_orchid.json"
 		]
         
     

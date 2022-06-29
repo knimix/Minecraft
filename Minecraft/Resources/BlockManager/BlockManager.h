@@ -16,7 +16,7 @@ struct Face{
     uint16_t Texture = 0;
     uint8_t Width = 16, Height = 16;
     int8_t OffsetX = 0, OffsetY = 0, OffsetZ = 0;
-    bool Cull = false;
+    bool Cull = true;
     uint8_t FaceType = FACE_FRONT;
 };
 
@@ -33,5 +33,5 @@ namespace BlockManager{
     void Shutdown();
     bool LoadBlock(const char* path);
     bool BlockExits(uint16_t id);
-    Block& GetBlock(uint16_t id);
+    const Block& GetBlock(uint8_t id);
 }

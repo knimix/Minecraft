@@ -6,12 +6,12 @@
             {
 				"type": "rotated_left",
 				"texture": "grass",
-                "cull": true
+                "cull": false
             },
 			{
 				"type": "rotated_right",
 				"texture": "grass",
-                "cull": true
+                "cull": false
             }
             
             

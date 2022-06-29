@@ -1,3 +1,4 @@
+#include <iostream>
 #include "TextureMatrix.h"
 #include "../Core.h"
 
@@ -45,5 +46,6 @@ uint16_t TextureMatrix::GetIndex(const char *name) {
     if(it != m_Index.end()){
         return it->second;
     }
+    std::cout << name << " \n";
     return 0;
 }

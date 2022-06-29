@@ -1,6 +1,7 @@
 #include <iostream>
 #include "DebugScene.h"
 #include "../../World/Chunk/ChunkManager/ChunkManager.h"
+#include "../../Application/Application.h"
 
 DebugScene::DebugScene(IO *io) : Scene(io) {
 
@@ -36,13 +37,19 @@ void DebugScene::RenderUI(Renderer2D *renderer) {
     std::string chunksQueueString = "Chunks in Update Queue: " + std::to_string(ChunkManager::GetChunkUpdater()->GetChunkQueue().size());
     std::string chunksGeneratorQueueString = "Chunks in Generator Queue: " + std::to_string(ChunkManager::GetChunkGenerator()->GetChunkQueue().size());
     std::string ChunksViewString = "Loaded Chunks: " + std::to_string(ChunkManager::GetChunkMap()->GetChunkMap().size());
-
+    std::string FrameTime = "Frame Time: " + std::to_string(std::round(Application::FrameTime * 1000)) + " ms";
+    if(glfwGetTime() - m_LastUpdate >= 0.6){
+        m_LastUpdate = glfwGetTime();
+        m_FPS = "FPS: " + std::to_string((int)std::round(1000.0 / (Application::FrameTime * 1000)));
+    }
     renderer->DrawString(chunkPosString.c_str(), FontManager::GetFont("draw"),{12,0},{600,30},{1,1,1,1},TEXT_ARRANGEMENT_LEFT);
     renderer->DrawString(blockPosString.c_str(), FontManager::GetFont("draw"),{12,30},{600,30},{1,1,1,1},TEXT_ARRANGEMENT_LEFT);
     renderer->DrawString(localPosString.c_str(), FontManager::GetFont("draw"),{12,60},{600,30},{1,1,1,1},TEXT_ARRANGEMENT_LEFT);
     renderer->DrawString(chunksQueueString.c_str(), FontManager::GetFont("draw"),{m_IO->WindowWidth - 612,0},{600,30},{1,1,1,1},TEXT_ARRANGEMENT_RIGHT);
     renderer->DrawString(chunksGeneratorQueueString.c_str(), FontManager::GetFont("draw"),{m_IO->WindowWidth - 612,30},{600,30},{1,1,1,1},TEXT_ARRANGEMENT_RIGHT);
     renderer->DrawString(ChunksViewString.c_str(), FontManager::GetFont("draw"),{m_IO->WindowWidth - 612,60},{600,30},{1,1,1,1},TEXT_ARRANGEMENT_RIGHT);
+    renderer->DrawString(FrameTime.c_str(), FontManager::GetFont("draw"),{m_IO->WindowWidth - 612,150},{600,30},{1,1,1,1},TEXT_ARRANGEMENT_RIGHT);
+    renderer->DrawString(m_FPS.c_str(), FontManager::GetFont("draw"),{m_IO->WindowWidth - 612,180},{600,30},{1,1,1,1},TEXT_ARRANGEMENT_RIGHT);
 
 
     int64_t size = 0;

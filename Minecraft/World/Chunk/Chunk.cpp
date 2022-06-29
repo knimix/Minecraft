@@ -9,6 +9,7 @@
 void Chunk::Create() {
     m_VertexArray = new VertexArray();
     m_ShaderBuffer = new ShaderBuffer();
+    m_NonCullFaceBuffer = new ShaderBuffer();
     Created = true;
 }
 
@@ -36,6 +37,7 @@ void Chunk::Generate() {
 
 void Chunk::Update() {
     m_BlockDataBuffer.clear();
+    m_NonCulledFaceBlockDataBuffer.clear();
 
     Chunk *leftChunk = ChunkManager::GetChunkMap()->GetChunk({Position.x - 1, Position.z}, true);
     Chunk *rightChunk = ChunkManager::GetChunkMap()->GetChunk({Position.x + 1, Position.z}, true);
@@ -62,13 +64,13 @@ void Chunk::Update() {
                 uint8_t top = 1;
                 uint8_t bottom = 1;
 
+
                 if (x == 0) {
                     if (leftChunk != nullptr) {
-                        left = leftChunk->GetBlock(15, y, z);
-
+                        left = leftChunk->GetBlock(CHUNK_SIZE-1, y, z);
                     }
                     right = GetBlock(x + 1, y, z);
-                } else if (x == 15) {
+                } else if (x == CHUNK_SIZE-1) {
                     if (rightChunk != nullptr) {
                         right = rightChunk->GetBlock(0, y, z);
 
@@ -81,11 +83,11 @@ void Chunk::Update() {
 
                 if (z == 0) {
                     if (backChunk != nullptr) {
-                        back = backChunk->GetBlock(x, y, 15);
+                        back = backChunk->GetBlock(x, y, CHUNK_SIZE-1);
 
                     }
                     front = GetBlock(x, y, z + 1);
-                } else if (z == 15) {
+                } else if (z == CHUNK_SIZE-1) {
                     if (frontChunk != nullptr) {
                         front = frontChunk->GetBlock(x, y, 0);
 
@@ -99,47 +101,89 @@ void Chunk::Update() {
                 if (y == 0) {
                     top = GetBlock(x, y + 1, z);
                     bottom = 0;
-                } else if (y == 255) {
+                } else if (y == CHUNK_HEIGHT-1) {
                     bottom = GetBlock(x, y - 1, z);
                     top = 0;
                 } else {
                     bottom = GetBlock(x, y - 1, z);
                     top = GetBlock(x, y + 1, z);
                 }
+
+
                 const auto&  blockTop = BlockManager::GetBlock(top);
                 const auto&  blockBottom = BlockManager::GetBlock(bottom);
                 const auto&  blockLeft = BlockManager::GetBlock(left);
                 const auto&  blockRight = BlockManager::GetBlock(right);
-                const auto&  blockFront =  BlockManager::GetBlock(front);
+               const auto&  blockFront =  BlockManager::GetBlock(front);
                 const auto&  blockBack =  BlockManager::GetBlock(back);
 
-                for (auto &face: blockData.Faces) {
+
+
+                for (auto const& face: blockData.Faces) {
 
                     if ((top == 0 || (blockTop.Transparent && !blockData.Transparent)) && face.FaceType == FACE_TOP ) {
-                        CreateFaceData(m_BlockDataBuffer, x, y, z, FACE_TOP, 0, face.Texture,face.OffsetX, face.OffsetY,face.OffsetZ, face.Width, face.Height);
+                        if(face.Cull){
+                            CreateFaceData(m_BlockDataBuffer, x, y, z, FACE_TOP, 0, face.Texture,face.OffsetX, face.OffsetY,face.OffsetZ, face.Width, face.Height);
+                        }else{
+                            CreateFaceData(m_NonCulledFaceBlockDataBuffer, x, y, z, FACE_TOP, 0, face.Texture,face.OffsetX, face.OffsetY,face.OffsetZ, face.Width, face.Height);
+                        }
+                        continue;
                     }
                     if ((bottom == 0 || (blockBottom.Transparent&& !blockData.Transparent)) && face.FaceType == FACE_BOTTOM ) {
-                        CreateFaceData(m_BlockDataBuffer, x, y, z, FACE_BOTTOM, 0, face.Texture, face.OffsetX, face.OffsetY,face.OffsetZ, face.Width, face.Height);
+                        if(face.Cull){
+                            CreateFaceData(m_BlockDataBuffer, x, y, z, FACE_BOTTOM, 0, face.Texture,face.OffsetX, face.OffsetY,face.OffsetZ, face.Width, face.Height);
+                        }else{
+                            CreateFaceData(m_NonCulledFaceBlockDataBuffer, x, y, z, FACE_BOTTOM, 0, face.Texture,face.OffsetX, face.OffsetY,face.OffsetZ, face.Width, face.Height);
+                        }
+                        continue;
                     }
                     if ((left == 0 || (blockLeft.Transparent&& !blockData.Transparent)) && face.FaceType == FACE_LEFT) {
-                        CreateFaceData(m_BlockDataBuffer, x, y, z,  FACE_LEFT, 0, face.Texture, face.OffsetX, face.OffsetY,face.OffsetZ, face.Width, face.Height);
+                        if(face.Cull){
+                            CreateFaceData(m_BlockDataBuffer, x, y, z, FACE_LEFT, 0, face.Texture,face.OffsetX, face.OffsetY,face.OffsetZ, face.Width, face.Height);
+                        }else{
+                            CreateFaceData(m_NonCulledFaceBlockDataBuffer, x, y, z, FACE_LEFT, 0, face.Texture,face.OffsetX, face.OffsetY,face.OffsetZ, face.Width, face.Height);
+                        }
+                        continue;
                     }
                     if ((right == 0 || (blockRight.Transparent&& !blockData.Transparent)) && face.FaceType == FACE_RIGHT) {
-                        CreateFaceData(m_BlockDataBuffer, x, y, z, FACE_RIGHT, 0, face.Texture, face.OffsetX, face.OffsetY,face.OffsetZ, face.Width, face.Height);
+                        if(face.Cull){
+                            CreateFaceData(m_BlockDataBuffer, x, y, z, FACE_RIGHT, 0, face.Texture,face.OffsetX, face.OffsetY,face.OffsetZ, face.Width, face.Height);
+                        }else{
+                            CreateFaceData(m_NonCulledFaceBlockDataBuffer, x, y, z, FACE_RIGHT, 0, face.Texture,face.OffsetX, face.OffsetY,face.OffsetZ, face.Width, face.Height);
+                        }
+                        continue;
                     }
                     if ((front == 0 || (blockFront.Transparent&& !blockData.Transparent)) && face.FaceType == FACE_FRONT) {
-                        CreateFaceData(m_BlockDataBuffer, x, y, z , FACE_FRONT, 0, face.Texture , face.OffsetX, face.OffsetY,face.OffsetZ, face.Width, face.Height);
+                        if(face.Cull){
+                            CreateFaceData(m_BlockDataBuffer, x, y, z, FACE_FRONT, 0, face.Texture,face.OffsetX, face.OffsetY,face.OffsetZ, face.Width, face.Height);
+                        }else{
+                            CreateFaceData(m_NonCulledFaceBlockDataBuffer, x, y, z, FACE_FRONT, 0, face.Texture,face.OffsetX, face.OffsetY,face.OffsetZ, face.Width, face.Height);
+                        }
+                        continue;
                     }
                     if ((back == 0 || (blockBack.Transparent&& !blockData.Transparent)) && face.FaceType == FACE_BACK ) {
-                        CreateFaceData(m_BlockDataBuffer, x, y, z,FACE_BACK, 0, face.Texture, face.OffsetX, face.OffsetY,face.OffsetZ, face.Width, face.Height);
+                        if(face.Cull){
+                            CreateFaceData(m_BlockDataBuffer, x, y, z, FACE_BACK, 0, face.Texture,face.OffsetX, face.OffsetY,face.OffsetZ, face.Width, face.Height);
+                        }else{
+                            CreateFaceData(m_NonCulledFaceBlockDataBuffer, x, y, z, FACE_BACK, 0, face.Texture,face.OffsetX, face.OffsetY,face.OffsetZ, face.Width, face.Height);
+                        }
+                        continue;
                     }
                     if(face.FaceType == FACE_ROTATED_LEFT){
-                        CreateFaceData(m_BlockDataBuffer, x, y, z, FACE_ROTATED_LEFT, 0, face.Texture, face.OffsetX, face.OffsetY,face.OffsetZ, face.Width, face.Height);
-
+                        if(face.Cull){
+                            CreateFaceData(m_BlockDataBuffer, x, y, z, FACE_ROTATED_LEFT, 0, face.Texture,face.OffsetX, face.OffsetY,face.OffsetZ, face.Width, face.Height);
+                        }else{
+                            CreateFaceData(m_NonCulledFaceBlockDataBuffer, x, y, z, FACE_ROTATED_LEFT, 0, face.Texture,face.OffsetX, face.OffsetY,face.OffsetZ, face.Width, face.Height);
+                        }
+                        continue;
                     }
                     if(face.FaceType == FACE_ROTATED_RIGHT){
-                        CreateFaceData(m_BlockDataBuffer, x, y, z, FACE_ROTATED_RIGHT, 0, face.Texture, face.OffsetX, face.OffsetY,face.OffsetZ, face.Width, face.Height);
-
+                        if(face.Cull){
+                            CreateFaceData(m_BlockDataBuffer, x, y, z, FACE_ROTATED_RIGHT, 0, face.Texture,face.OffsetX, face.OffsetY,face.OffsetZ, face.Width, face.Height);
+                        }else{
+                            CreateFaceData(m_NonCulledFaceBlockDataBuffer, x, y, z, FACE_ROTATED_RIGHT, 0, face.Texture,face.OffsetX, face.OffsetY,face.OffsetZ, face.Width, face.Height);
+                        }
+                        continue;
                     }
                 }
 
@@ -159,8 +203,11 @@ void Chunk::Upload() {
     if (Created) {
         Uploaded = true;
         m_BlockData = m_BlockDataBuffer;
+        m_NonCulledFaceBlockData = m_NonCulledFaceBlockDataBuffer;
         m_ShaderBuffer->Bind();
         m_ShaderBuffer->Data(m_BlockData.data(), m_BlockData.size() * sizeof(int), GL_STATIC_DRAW);
+        m_NonCullFaceBuffer->Bind();
+        m_NonCullFaceBuffer->Data(m_NonCulledFaceBlockData.data(), m_NonCulledFaceBlockData.size() * sizeof(int), GL_STATIC_DRAW);
     }
 }
 
@@ -169,9 +216,13 @@ void Chunk::Render() {
         if (!Uploaded) {
             Upload();
         }
+        glEnable(GL_CULL_FACE);
         m_VertexArray->Bind();
         m_ShaderBuffer->BindBufferBase(0);
         glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, m_BlockData.size() / 3);
+        glDisable(GL_CULL_FACE);
+        m_NonCullFaceBuffer->BindBufferBase(0);
+        glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, m_NonCulledFaceBlockData.size() / 3);
     }
 }
 

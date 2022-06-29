@@ -96,7 +96,7 @@ void GameScene::Update(double deltaTime) {
                     break;
                 }
 
-                chunk->SetBlock(localBlockPosition.x,localBlockPosition.y,localBlockPosition.z,4);
+                chunk->SetBlock(localBlockPosition.x,localBlockPosition.y,localBlockPosition.z,5);
                 ChunkUpdater::UpdateChunk(chunk);
             }
             break;

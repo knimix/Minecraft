@@ -4,9 +4,9 @@
 static ChunkMap *s_ChunkMap = nullptr;
 static ChunkUpdater *s_ChunkUpdater = nullptr;
 static ChunkGenerator *s_ChunkGenerator = nullptr;
-static int s_ViewDistance = 16;
+static int s_ViewDistance = 18;
 static int s_PreCreateDistance = 1;
-static int s_Seed = 99;
+static int s_Seed = 33;
 static Camera *s_Camera = nullptr;
 
 
@@ -31,7 +31,7 @@ void PreCreateChunks(const ChunkPosition &center) {
 void ChunkManager::Initialize(int seed) {
     s_ChunkMap = new ChunkMap();
     s_ChunkUpdater = new ChunkUpdater(1);
-    s_ChunkGenerator = new ChunkGenerator(4);
+    s_ChunkGenerator = new ChunkGenerator(5);
     s_Seed = seed;
 }
 

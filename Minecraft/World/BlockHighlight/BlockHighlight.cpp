@@ -49,7 +49,7 @@ void BlockHighlight::Render(const glm::mat4& view) {
     m_BlockHighlightShader->SetUniformMatrix4f("view",view);
     m_BlockHighlightShader->SetUniformMatrix4f("model",glm::scale(m_Model,glm::vec3(1.001,1.001,1.001)));
     m_VertexArray->Bind();
-    glLineWidth(2);
+    glLineWidth(3);
 
     glDrawElements(GL_LINES,12*2,GL_UNSIGNED_INT, nullptr);
 }

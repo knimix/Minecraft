@@ -16,7 +16,7 @@ void Terrain::Prepare() {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glDisable(GL_BLEND);
-    glEnable(GL_BLEND);
+   glEnable(GL_BLEND);
     glAlphaFunc(GL_GREATER, 0.5);
     glEnable(GL_ALPHA_TEST);
 }

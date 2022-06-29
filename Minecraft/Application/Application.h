@@ -11,6 +11,7 @@ public:
     ~Application();
     void Run();
     static SceneManager* SceneManager;
+    static double FrameTime;
 private:
     Terrain* m_Terrain;
     Window* m_Window;

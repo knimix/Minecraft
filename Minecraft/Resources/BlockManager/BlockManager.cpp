@@ -1,8 +1,9 @@
+#include <iostream>
 #include "BlockManager.h"
 #include "../JsonLoader.h"
 #include "../TextureManager/TextureManager.h"
 
-std::vector<Block> s_Blocks;
+static std::vector<Block> s_Blocks;
 
 void BlockManager::Initialize() {
     Block air;
@@ -123,6 +124,6 @@ bool BlockManager::LoadBlock(const char *path) {
 bool BlockManager::BlockExits(uint16_t id) {
     return id < s_Blocks.size();
 }
-Block& BlockManager::GetBlock(uint16_t id) {
+const Block& BlockManager::GetBlock(uint8_t id) {
     return s_Blocks[id];
 }

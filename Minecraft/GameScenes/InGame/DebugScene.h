@@ -12,4 +12,6 @@ public:
     void RenderUI(Renderer2D* renderer) override;
 
 private:
+    std::string m_FPS;
+    double m_LastUpdate = 0;
 };

@@ -15,8 +15,6 @@ include_directories(dependencies/FastNoise/src)
 include_directories(dependencies/Fusion/Include)
 include_directories(dependencies/Json/include)
 
+add_executable(Minecraft main.cpp ${SOURCE_FILES} ${IMGUI_FILES} dependencies/FastNoise/src/FastNoise/FastNoise.cpp)
 
-
-add_executable(Minecraft main.cpp ${SOURCE_FILES} ${IMGUI_FILES} dependencies/FastNoise/src/FastNoise/FastNoise.cpp Minecraft/Resources/JsonLoader.cpp Minecraft/Resources/JsonLoader.h Minecraft/Resources/BlockManager/BlockManager.cpp Minecraft/Resources/BlockManager/BlockManager.h Minecraft/Resources/TextureManager/TextureManager.cpp Minecraft/Resources/TextureManager/TextureManager.h)
-
-target_link_libraries(Minecraft ${CMAKE_CURRENT_LIST_DIR}/dependencies/OpenGL/bin/OpenGL.a ${CMAKE_CURRENT_LIST_DIR}/dependencies/GLFW/bin/GLFW.a )
+target_link_libraries(Minecraft ${CMAKE_CURRENT_LIST_DIR}/dependencies/OpenGL/bin/OpenGL.a ${CMAKE_CURRENT_LIST_DIR}/dependencies/GLFW/bin/GLFW.a)

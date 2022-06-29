@@ -24,8 +24,7 @@ ChunkGenerator::ChunkGenerator(int threadCount) {
                     }
                     chunk->Generating = false;
                 } else {
-                    std::this_thread::sleep_for(std::chrono::microseconds(1));
-                }
+                    std::this_thread::sleep_for(std::chrono::microseconds (1));                }
             }
         });
         m_Threads.emplace_back(thread);

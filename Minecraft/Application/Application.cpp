@@ -7,7 +7,9 @@
 #include "../Resources/ResourceManager/ResourceManager.h"
 
 static bool s_Run = true;
+static double s_StartTime = 0;
 SceneManager* Application::SceneManager;
+double Application::FrameTime;
 
 Application::Application() {
 
@@ -39,6 +41,7 @@ Application::~Application() {
 
 void Application::Run() {
     while (!glfwWindowShouldClose(m_Window->GetBaseWindow())){
+        s_StartTime = glfwGetTime();
         SceneManager->BeginFrame();
         SceneManager->Clear();
 
@@ -47,9 +50,9 @@ void Application::Run() {
         SceneManager->Render();
         SceneManager->RenderUI();
         ClearIO(m_Window->GetIO());
+        FrameTime = glfwGetTime() - s_StartTime;
         m_Window->Update();
         SceneManager->EndFrame();
-
     }
 }
 

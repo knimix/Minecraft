@@ -32,8 +32,11 @@ private:
     void CreateFaceData(std::vector<int>& data, uint8_t blockX, uint8_t blockY, uint8_t blockZ, uint8_t faceType, uint8_t lightLevel, uint16_t textureIndex,  int8_t offsetX, int8_t offsetY, int8_t offsetZ,uint8_t width, uint8_t height);
     VertexArray* m_VertexArray = nullptr;
     ShaderBuffer* m_ShaderBuffer = nullptr;
+    ShaderBuffer* m_NonCullFaceBuffer = nullptr;
     mutable std::mutex m_Mutex;
     std::vector<int> m_BlockData;
+    std::vector<int> m_NonCulledFaceBlockData;
     std::vector<int> m_BlockDataBuffer;
+    std::vector<int> m_NonCulledFaceBlockDataBuffer;
     std::array<uint8_t,CHUNK_AREA> m_Blocks = {0};
 };

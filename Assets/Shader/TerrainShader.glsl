@@ -153,13 +153,13 @@ void main() {
     int offsetX = (data[gl_InstanceID * 3 + 2] & 0xFF000000) >> 24;
     int offsetY = (data[gl_InstanceID * 3 + 2] & 0x00FF0000) >> 16 ;
     int offsetZ = (data[gl_InstanceID * 3 + 2] & 0x0000FF00) >> 8 ;
-    if (offsetX > 128) offsetX += 0xFFFFFF00;
-    if (offsetY > 128) offsetY += 0xFFFFFF00;
-    if (offsetZ > 128) offsetZ += 0xFFFFFF00;
+    if (offsetX >= 128) offsetX += 0xFFFFFF00;
+    if (offsetY >= 128) offsetY += 0xFFFFFF00;
+    if (offsetZ >= 128) offsetZ += 0xFFFFFF00;
 
 
     if(data.length() > 0){
-        vec3 blockOffset =  vec3((chunkX*16 + blockX),blockY, (chunkZ*16) + blockZ);
+        vec3 blockOffset =  vec3((chunkX*32 + blockX),blockY, (chunkZ*32) + blockZ);
         TextureCoords = GenerateTextureCoords(gl_VertexID, vec2(offsetX * scale, -offsetY * scale), width, height);
 
         vec3 faceCoord;
