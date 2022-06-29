@@ -1,0 +1,42 @@
+{
+	"id": 6,
+	"name": "oak_log",
+	"faces": [
+      
+			
+			{
+				"type": "top",
+				"texture": "oak_log_top"
+            },
+{
+				"type": "bottom",
+				"texture": "oak_log_top"
+            },
+			{
+				"type": "left",
+				"texture": "oak_log"
+            },
+			{
+				"type": "right",
+				"texture": "oak_log"
+            },
+			{
+				"type": "front",
+				"texture": "oak_log"
+            },
+			{
+				"type": "back",
+				"texture": "oak_log"
+            }
+			
+			
+			
+		
+		
+			
+            
+            
+        ]
+	
+	
+}

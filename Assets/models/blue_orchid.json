@@ -1,0 +1,21 @@
+{
+	"id": 13,
+	"transparent": true,
+	"name": "blue_orchid",
+	"faces": [
+            {
+				"type": "rotated_left",
+				"texture": "blue_orchid",
+                "cull": false
+            },
+			{
+				"type": "rotated_right",
+				"texture": "blue_orchid",
+                "cull": false
+            }
+            
+            
+        ]
+	
+	
+}

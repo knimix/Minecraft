@@ -1,0 +1,43 @@
+{
+	"id": 7,
+    "transparent": true,
+	"name": "leaves",
+	"faces": [
+      
+			
+			{
+				"type": "top",
+				"texture": "leaves"
+            },
+{
+				"type": "bottom",
+				"texture": "leaves"
+            },
+			{
+				"type": "left",
+				"texture": "leaves"
+            },
+			{
+				"type": "right",
+				"texture": "leaves"
+            },
+			{
+				"type": "front",
+				"texture": "leaves"
+            },
+			{
+				"type": "back",
+				"texture": "leaves"
+            }
+			
+			
+			
+		
+		
+			
+            
+            
+        ]
+	
+	
+}

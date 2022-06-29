@@ -1,0 +1,21 @@
+{
+	"id": 11,
+	"transparent": true,
+	"name": "orange_tulip",
+	"faces": [
+            {
+				"type": "rotated_left",
+				"texture": "orange_tulip",
+                "cull": false
+            },
+			{
+				"type": "rotated_right",
+				"texture": "orange_tulip",
+                "cull": false
+            }
+            
+            
+        ]
+	
+	
+}
