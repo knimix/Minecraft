@@ -5,6 +5,7 @@
 #include "../../OpenGL/Shader.h"
 #include "../../Texture/SubTexture.h"
 #include <glm/glm.hpp>
+#include <array>
 
 #define TEXT_ARRANGEMENT_CENTERED 1
 #define TEXT_ARRANGEMENT_LEFT 0

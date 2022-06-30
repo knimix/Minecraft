@@ -1,8 +1,8 @@
 #pragma once
 #include "../Core.h"
 #include "../UI/IO/IO.h"
-#include <GLM/glm.hpp>
-#include <GLM/gtc/type_ptr.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 
 class Camera {
@@ -20,7 +20,7 @@ public:
     inline const glm::vec3& GetCameraFront() const {return m_CameraFront;}
     inline const glm::vec3& GetCameraUp() const {return m_CameraUp;}
     inline const glm::vec3& GetCameraDirection() const {return m_CameraDirection;}
-    float m_CameraSpeed = 2.4f;
+    float m_CameraSpeed = 0.4f;
 
 private:
     IO* m_IO = nullptr;

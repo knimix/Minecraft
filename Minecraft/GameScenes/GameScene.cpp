@@ -50,9 +50,9 @@ void GameScene::Update(double deltaTime) {
     if(m_IO->KeyboardClicked[GLFW_KEY_F3]){
         m_ToggleDebug = !m_ToggleDebug;
         if(m_ToggleDebug){
-            Application::SceneManager->LoadScene("DebugView");
+            Application::m_SceneManager->LoadScene("DebugView");
         }else{
-            Application::SceneManager->UnloadScene("DebugView");
+            Application::m_SceneManager->UnloadScene("DebugView");
         }
     }
 

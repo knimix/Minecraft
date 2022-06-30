@@ -121,17 +121,17 @@ unsigned int Shader::compileShader(unsigned int type, const char *source) {
         glGetShaderInfoLog(id, length, &length, message);
         if(m_Debug){
             if (type == GL_VERTEX_SHADER) {
-                std::cout << "Vertex Shader Error: " << message << std::endl;
+                std::cout << "Vertex shaders Error: " << message << std::endl;
             } else if (type == GL_FRAGMENT_SHADER) {
-                std::cout << "Fragment Shader Error: " << message << std::endl;
+                std::cout << "Fragment shaders Error: " << message << std::endl;
             } else if (type == GL_GEOMETRY_SHADER) {
-                std::cout << "Geometry Shader Error: " << message << std::endl;
+                std::cout << "Geometry shaders Error: " << message << std::endl;
             } else if (type == GL_TESS_CONTROL_SHADER) {
-                std::cout << "Tessellation Control Shader Error: " << message << std::endl;
+                std::cout << "Tessellation Control shaders Error: " << message << std::endl;
             } else if (type == GL_TESS_EVALUATION_SHADER) {
-                std::cout << "Tessellation Evaluation Shader Error: " << message << std::endl;
+                std::cout << "Tessellation Evaluation shaders Error: " << message << std::endl;
             } else if (type == GL_COMPUTE_SHADER) {
-                std::cout << "Compute Shader Error: " << message << std::endl;
+                std::cout << "Compute shaders Error: " << message << std::endl;
             }
         }
         glDeleteShader(id);

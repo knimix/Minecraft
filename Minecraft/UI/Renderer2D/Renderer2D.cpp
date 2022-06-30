@@ -33,7 +33,7 @@ Renderer2D::Renderer2D(IO *io) {
     for (size_t i = 0; i < MaxTextures; i++) {
         m_TextureSlots[i] = 0;
     }
-    m_UIShader = new Shader("../Assets/Shader/UIShader.glsl");
+    m_UIShader = new Shader("../Assets/shaders/UIShader.glsl");
     m_UIShader->SetUniformInt("F_Texture0", 0);
     m_UIShader->SetUniformInt("F_Texture1", 1);
     m_UIShader->SetUniformInt("F_Texture2", 2);

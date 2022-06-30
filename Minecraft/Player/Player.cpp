@@ -16,14 +16,14 @@ void Player::Update() {
 
 
     if(m_IO->KeyboardClicked[GLFW_KEY_ESCAPE]){
-        Application::SceneManager->UnloadScene("GameView");
-        Application::SceneManager->LoadScene("MainMenu");
+        Application::m_SceneManager->UnloadScene("GameView");
+        Application::m_SceneManager->LoadScene("MainMenu");
     }
     if(m_IO->KeyboardClicked[GLFW_KEY_L]){
         if(m_Filled){
-            glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+            //glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
         }else{
-            glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+            //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
         }
         m_Filled = !m_Filled;
     }

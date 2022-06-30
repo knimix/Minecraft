@@ -1,6 +1,7 @@
 #include "Coordinate.h"
 #include <cmath>
 #include <string>
+#include <algorithm>
 
 BlockPosition Coordinate::ToBlockPosition(const glm::vec3 &position) {
     return {(int64_t) std::floor(position.x), (int64_t) std::floor(position.y), (int64_t) std::floor(position.z)};

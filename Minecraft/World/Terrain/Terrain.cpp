@@ -3,7 +3,7 @@
 #include "../../Resources/TextureManager/TextureManager.h"
 
 Terrain::Terrain(IO *io, const glm::mat4 &projection) {
-    m_TerrainShader = new Shader("../Assets/Shader/TerrainShader.glsl", true);
+    m_TerrainShader = new Shader("../Assets/shaders/TerrainShader.glsl", true);
     m_TerrainShader->SetUniformMatrix4f("projection", projection);
 
 }
@@ -17,8 +17,8 @@ void Terrain::Prepare() {
     glEnable(GL_CULL_FACE);
     glDisable(GL_BLEND);
    glEnable(GL_BLEND);
-    glAlphaFunc(GL_GREATER, 0.5);
-    glEnable(GL_ALPHA_TEST);
+    //glAlphaFunc(GL_GREATER, 0.5);
+    //glEnable(GL_ALPHA_TEST);
 }
 
 void Terrain::Update(const glm::vec3 &position) {

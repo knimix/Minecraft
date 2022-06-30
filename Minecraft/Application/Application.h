@@ -10,7 +10,7 @@ public:
     Application();
     ~Application();
     void Run();
-    static SceneManager* SceneManager;
+    static SceneManager* m_SceneManager;
     static double FrameTime;
 private:
     Terrain* m_Terrain;

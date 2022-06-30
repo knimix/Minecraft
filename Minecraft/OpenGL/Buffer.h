@@ -10,7 +10,6 @@
     static uint32_t DataTypeSize(unsigned int type){
         switch (type) {
             case GL_FLOAT: return 4;
-            case GL_DOUBLE: return 8;
             case GL_INT: return 4;
             case GL_BYTE: return 1;
             case GL_BOOL: return 1;

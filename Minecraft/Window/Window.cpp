@@ -7,8 +7,6 @@ Window::Window(int width, int height, const std::string &title) : m_Width(width)
         return;
     }
 
-
-
     const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
     glfwWindowHint(GLFW_RED_BITS, mode->redBits);
@@ -106,6 +104,7 @@ Window::Window(int width, int height, const std::string &title) : m_Width(width)
 
     glfwMakeContextCurrent(m_Window);
     glfwSwapInterval(1);
+    gladLoadGL();
     if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
         return;
     }

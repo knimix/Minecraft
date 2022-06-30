@@ -12,8 +12,8 @@ void MainMenuScene::Load() {
 
 
 
-    auto buttonTexture = AddTexture("../Assets/Textures/Ui/widgets.png");
-    m_Background = AddTexture("../Assets/Textures/Ui/background.png");
+    auto buttonTexture = AddTexture("../Assets/textures/Ui/widgets.png");
+    m_Background = AddTexture("../Assets/textures/Ui/background.png");
     m_Font = FontManager::GetFont("default");
 
 
@@ -25,8 +25,8 @@ void MainMenuScene::Load() {
     m_SinglePlayerButton->SetHover({0.1,0.1,0.25,1.0});
     m_SinglePlayerButton->SetText("Singleplayer");
     m_SinglePlayerButton->SetClickCallback([](){
-        Application::SceneManager->UnloadScene("MainMenu");
-        Application::SceneManager->LoadScene("GameView");
+        Application::m_SceneManager->UnloadScene("MainMenu");
+        Application::m_SceneManager->LoadScene("GameView");
     });
 
     m_MultiplayerButton = AddComponent<Button>();

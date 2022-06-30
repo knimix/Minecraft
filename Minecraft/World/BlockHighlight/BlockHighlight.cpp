@@ -1,7 +1,7 @@
 #include "BlockHighlight.h"
 
 BlockHighlight::BlockHighlight(const glm::mat4& projection) {
-    m_BlockHighlightShader = new Shader("../Assets/Shader/BlockHighlight.glsl");
+    m_BlockHighlightShader = new Shader("../Assets/shaders/BlockHighlight.glsl");
     m_BlockHighlightShader->SetUniformMatrix4f("projection",projection);
     m_VertexArray = new VertexArray();
 

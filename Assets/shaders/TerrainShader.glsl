@@ -216,4 +216,5 @@ void main(){
         outColor = vec4(diffuse,1.0) * texture(image,vec3(TextureCoords,TextureIndex));
 
     }
+    if(outColor.a < 0.5) { discard; }
 }

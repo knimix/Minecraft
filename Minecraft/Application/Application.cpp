@@ -8,7 +8,7 @@
 
 static bool s_Run = true;
 static double s_StartTime = 0;
-SceneManager* Application::SceneManager;
+SceneManager* Application::m_SceneManager;
 double Application::FrameTime;
 
 Application::Application() {
@@ -19,17 +19,17 @@ Application::Application() {
 
     ResourceManager::Initialize();
 
-    FontManager::AddFont("default",new Font("../Assets/Fonts/MinecraftRegular-Bmg3.otf",25));
-    FontManager::AddFont("draw",new Font("../Assets/Fonts/MinecraftRegular-Bmg3.otf",28));
+    FontManager::AddFont("default",new Font("../Assets/fonts/MinecraftRegular-Bmg3.otf",25));
+    FontManager::AddFont("draw",new Font("../Assets/fonts/MinecraftRegular-Bmg3.otf",28));
 
-    SceneManager = new class SceneManager(m_Window->GetIO());
+    m_SceneManager = new class SceneManager(m_Window->GetIO());
 
 
-    SceneManager->AddScene("MainMenu", new MainMenuScene(m_Window->GetIO()));
-    SceneManager->AddScene("GameView", new GameScene(m_Window->GetIO()));
-    SceneManager->AddScene("DebugView", new DebugScene(m_Window->GetIO()));
+    m_SceneManager->AddScene("MainMenu", new MainMenuScene(m_Window->GetIO()));
+    m_SceneManager->AddScene("GameView", new GameScene(m_Window->GetIO()));
+    m_SceneManager->AddScene("DebugView", new DebugScene(m_Window->GetIO()));
 
-    SceneManager->LoadScene("MainMenu");
+    m_SceneManager->LoadScene("MainMenu");
 
 }
 Application::~Application() {
@@ -42,17 +42,17 @@ Application::~Application() {
 void Application::Run() {
     while (!glfwWindowShouldClose(m_Window->GetBaseWindow())){
         s_StartTime = glfwGetTime();
-        SceneManager->BeginFrame();
-        SceneManager->Clear();
+        m_SceneManager->BeginFrame();
+        m_SceneManager->Clear();
 
-        SceneManager->Update(SceneManager->GetDeltaTime());
+        m_SceneManager->Update(m_SceneManager->GetDeltaTime());
 
-        SceneManager->Render();
-        SceneManager->RenderUI();
+        m_SceneManager->Render();
+        m_SceneManager->RenderUI();
         ClearIO(m_Window->GetIO());
         FrameTime = glfwGetTime() - s_StartTime;
         m_Window->Update();
-        SceneManager->EndFrame();
+        m_SceneManager->EndFrame();
     }
 }
 
