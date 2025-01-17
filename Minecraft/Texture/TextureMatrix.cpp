@@ -20,6 +20,8 @@ void TextureMatrix::Create(int width, int height, int mipmapLevel) {
     if(m_Data.empty()){
         return;
     }
+    m_Width = width;
+    m_Height = height;
     m_Index.clear();
     glGenTextures(1, &m_Texture);
     glBindTexture(GL_TEXTURE_2D_ARRAY,m_Texture);

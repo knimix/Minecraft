@@ -28,7 +28,6 @@ void Terrain::Update(const glm::vec3 &position) {
 void Terrain::Render(const glm::mat4 &view) {
     m_TerrainShader->Bind();
     m_TerrainShader->SetUniformMatrix4f("view", view);
-    TextureManager::GetFaceTextureMatrix()->Bind();
     for (auto chunk: ChunkManager::GetChunkMap()->GetChunks()) {
         if (ChunkManager::IsChunkInViewDistance(chunk)) {
             m_TerrainShader->SetUniformInt("chunkX", chunk->Position.x);
