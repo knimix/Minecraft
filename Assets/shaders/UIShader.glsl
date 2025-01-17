@@ -21,7 +21,7 @@ void main() {
 
 
 #fragment
-#version 430 core
+#version 330 core
 
 in vec4 F_Color;
 in vec2 F_TextureCoord;
@@ -48,79 +48,79 @@ out vec4 OutColor;
 
 void main(){
     int textureIndex = int(F_TextureIndex);
-    vec4 texture;
+    vec4 textureColor;
     switch (textureIndex){
         case -1:{
-            texture = vec4(F_Color.rgba);
+            textureColor = vec4(F_Color.rgba);
             break;
         }
         case 0:{
-            texture = texture2D(F_Texture0, F_TextureCoord);
+            textureColor = texture(F_Texture0, F_TextureCoord);
             break;
         }
         case 1:{
-            texture = texture2D(F_Texture1, F_TextureCoord);
+            textureColor = texture(F_Texture1, F_TextureCoord);
             break;
         }
         case 2:{
-            texture = texture2D(F_Texture2, F_TextureCoord);
+            textureColor = texture(F_Texture2, F_TextureCoord);
             break;
         }
         case 3:{
-            texture = texture2D(F_Texture3, F_TextureCoord);
+            textureColor = texture(F_Texture3, F_TextureCoord);
             break;
         }
         case 4:{
-            texture = texture2D(F_Texture4, F_TextureCoord);
+            textureColor = texture(F_Texture4, F_TextureCoord);
             break;
         }
         case 5:{
-            texture = texture2D(F_Texture5, F_TextureCoord);
+            textureColor = texture(F_Texture5, F_TextureCoord);
             break;
         }
         case 6:{
-            texture = texture2D(F_Texture6, F_TextureCoord);
+            textureColor = texture(F_Texture6, F_TextureCoord);
             break;
         }
         case 7:{
-            texture = texture2D(F_Texture7, F_TextureCoord);
+            textureColor = texture(F_Texture7, F_TextureCoord);
             break;
         }
         case 8:{
-            texture = texture2D(F_Texture8, F_TextureCoord);
+            textureColor = texture(F_Texture8, F_TextureCoord);
             break;
         }
         case 9:{
-            texture = texture2D(F_Texture9, F_TextureCoord);
+            textureColor = texture(F_Texture9, F_TextureCoord);
             break;
         }
         case 10:{
-            texture = texture2D(F_Texture10, F_TextureCoord);
+            textureColor = texture(F_Texture10, F_TextureCoord);
             break;
         }
         case 11:{
-            texture = texture2D(F_Texture11, F_TextureCoord);
+            textureColor = texture(F_Texture11, F_TextureCoord);
             break;
         }
         case 12:{
-            texture = texture2D(F_Texture12, F_TextureCoord);
+            textureColor = texture(F_Texture12, F_TextureCoord);
             break;
         }
         case 13:{
-            texture = texture2D(F_Texture13, F_TextureCoord);
+            textureColor = texture(F_Texture13, F_TextureCoord);
             break;
         }
         case 14:{
-            texture = texture2D(F_Texture14, F_TextureCoord);
+            textureColor = texture(F_Texture14, F_TextureCoord);
             break;
         }
         case 15:{
-            texture = texture2D(F_Texture15, F_TextureCoord);
+            textureColor = texture(F_Texture15, F_TextureCoord);
             break;
         }
     }
     if (textureIndex > -1){
-        texture.rgb += F_Color.rgb;
+        textureColor.rgb += F_Color.rgb;
     }
-    OutColor = vec4(F_Color.rgb + texture.rgb, F_Color.a * texture.a);
+    OutColor = vec4(F_Color.rgb + textureColor.rgb, F_Color.a * textureColor.a);
 }

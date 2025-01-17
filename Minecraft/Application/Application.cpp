@@ -22,7 +22,7 @@ Application::Application() {
     FontManager::AddFont("default",new Font("../Assets/fonts/MinecraftRegular-Bmg3.otf",25));
     FontManager::AddFont("draw",new Font("../Assets/fonts/MinecraftRegular-Bmg3.otf",28));
 
-    m_SceneManager = new class SceneManager(m_Window->GetIO());
+    m_SceneManager = new SceneManager(m_Window->GetIO());
 
 
     m_SceneManager->AddScene("MainMenu", new MainMenuScene(m_Window->GetIO()));
