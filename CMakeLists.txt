@@ -3,22 +3,15 @@ project(Minecraft)
 
 set(CMAKE_CXX_STANDARD 23)
 
+find_package(glfw3)
+find_package(glad)
+find_package(glm)
+find_package(stb)
+find_package(nlohmann_json)
+
+
 file(GLOB_RECURSE SOURCE_FILES Minecraft/*.cpp Minecraft/*.h Minecraft/*.c)
-if(WIN32)
-    include_directories(dependencies/GLFW/include)
-    include_directories(dependencies/OpenGL/include)
-    include_directories(dependencies/GLM/include)
-    include_directories(dependencies/STB/include)
-    include_directories(dependencies/Json/include)
-endif()
 
-include_directories(dependencies/FastNoise/src)
-include_directories(dependencies/Glad/include)
+add_executable(Minecraft main.cpp ${SOURCE_FILES})
 
-add_executable(Minecraft main.cpp ${SOURCE_FILES} ${IMGUI_FILES} dependencies/FastNoise/src/FastNoise/FastNoise.cpp dependencies/Glad/src/glad.c)
-
-if(WIN32)
-target_link_libraries(Minecraft ${CMAKE_CURRENT_LIST_DIR}/dependencies/OpenGL/bin/OpenGL.a ${CMAKE_CURRENT_LIST_DIR}/dependencies/GLFW/bin/GLFW.a)
-else()
-    target_link_libraries(Minecraft glfw)
-endif()
+target_link_libraries(Minecraft glad::glad glm::glm stb::stb nlohmann_json::nlohmann_json glfw)

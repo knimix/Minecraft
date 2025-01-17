@@ -1,6 +1,6 @@
 #pragma once
 #include "../../Core.h"
-#include "stb/stb_truetype.h"
+#include "stb_truetype.h"
 class Font {
 public:
     Font(const char* path, int size);

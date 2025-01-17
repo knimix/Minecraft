@@ -1,8 +1,8 @@
 #include "Font.h"
 
 #define STB_TRUETYPE_IMPLEMENTATION
-#include "stb/stb_truetype.h"
-#include "stb/stb_image.h"
+#include "stb_truetype.h"
+#include "stb_image.h"
 #include <cstdio>
 #include <cstdint>
 

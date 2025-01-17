@@ -1,6 +1,6 @@
 #pragma once
 #include "../Chunk/Chunk.h"
-#include <FastNoise/FastNoise.h>
+#include "../../Noise/FastNoise.h"
 #include <unordered_map>
 
 class WorldGenerator {
@@ -12,4 +12,5 @@ public:
     static int Noise3D(int64_t x, int64_t y, int64_t z);
 private:
     static FastNoise m_Noise;
+
 };

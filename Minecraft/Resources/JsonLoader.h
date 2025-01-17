@@ -1,9 +1,7 @@
 #pragma once
-#ifdef WIN32
-#include <Json/json.hpp>
-#else
+
 #include <nlohmann/json.hpp>
-#endif
+
 #include "../Core.h"
 
 typedef nlohmann::json Json;
